@@ -41,6 +41,21 @@ dataHandler = {
     },
     createNewBoard: function(boardTitle, callback) {
         // creates new board, saves it and calls the callback function with its data
+        let existingBoardIDs = [];
+        for (let i = 0; i < this._data.boards.length; i++) {
+            existingBoardIDs.push(this._data.boards[i].id);
+        }
+        let newBoardID = Math.max(existingBoardIDs) + 1;
+        let newBoard = {
+            "id": newBoardID,
+            "title": boardTitle,
+            "is_active": true
+        };
+        this._data.boards.push(newBoard);
+        this._saveData();
+        dom.showBoards(this._data.boards);
+        callback(newBoard)
+
     },
     createNewCard: function(cardTitle, boardId, statusId, callback) {
         // creates new card, saves it and calls the callback function with its data
