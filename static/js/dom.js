@@ -18,12 +18,19 @@ dom = {
         for(let i=0; i<numberOfBoards; i++){
             let newDivForBoard = document.createElement("div");
             newDivForBoard.innerHTML = boards[i].title;
-            newDivForBoard.classList.add("row", "card", "bg-info");
+            newDivForBoard.classList.add("row", "card", "bg-info", "container");
+            newDivForBoard.setAttribute("id", boards[i].id);
             boardDiv.appendChild(newDivForBoard);
 
             let newButton = document.createElement("i");
             newButton.classList.add("fas", "fa-angle-down");
+            newButton.setAttribute("id", "detail"+boards[i].id);
             newDivForBoard.appendChild(newButton);
+
+            let editButton = document.createElement("i");
+            editButton.classList.add("far", "fa-edit");
+            editButton.setAttribute("id", "edit"+boards[i].id);
+            newDivForBoard.appendChild(editButton);
         }
 
     },
@@ -79,4 +86,5 @@ dom = {
         newButton.classList.add("fas", "fa-angle-down");
         newDivForBoard.appendChild(newButton);
     },
+
 };
