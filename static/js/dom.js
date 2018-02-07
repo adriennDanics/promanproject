@@ -123,6 +123,7 @@ dom = {
         let boardID = Number(this.parentElement.getAttribute("id").replace("board",""));
         let editTitleInput = document.createElement("input");
         this.parentElement.appendChild(editTitleInput);
+        this.setAttribute("hidden", true);
         editTitleInput.setAttribute("placeholder", "New Title");
         editTitleInput.setAttribute("type", "text");
         editTitleInput.setAttribute("id", "edit-input-field"+boardID);
