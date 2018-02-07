@@ -135,8 +135,8 @@ dom = {
             dataHandler.editBoardTitle(newBoardTitle, boardID);
             location.reload();
         }, false);
-    }
-        addEventListenerToCloseBoardDetailButton: function () {
+    },
+    addEventListenerToCloseBoardDetailButton: function () {
         let closeDetailButtons = document.getElementsByClassName("fas fa-angle-up");
         for (let i = 0; i < closeDetailButtons.length; i++) {
             closeDetailButtons[i].addEventListener("click", function () {
