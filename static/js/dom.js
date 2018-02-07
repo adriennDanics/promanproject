@@ -8,7 +8,6 @@ dom = {
         this.addEventListenerToBoardDetailButton();
         this.addEventListenerToCloseBoardDetailButton();
         this.addEventListenerToEditBoardTitle();
-        this.revealFooter();
         // retrieves boards and makes showBoards called
     },
     showBoards: function(boards) {
@@ -22,7 +21,7 @@ dom = {
         for(let i=0; i<numberOfBoards; i++){
             let newDivForBoard = document.createElement("div");
             newDivForBoard.innerHTML = boards[i].title;
-            newDivForBoard.classList.add("row", "card", "bg-info", "container");
+            newDivForBoard.classList.add("row", "card", "bg-light", "container");
             newDivForBoard.setAttribute("id", "board"+boards[i].id);
             boardDiv.appendChild(newDivForBoard);
 
@@ -153,11 +152,5 @@ dom = {
 
             });
         }
-    },
-    revealFooter: function () {
-        document.getElementById("stuff").addEventListener("mouseover", function () {
-            setTimeout(document.getElementById("footer").removeAttribute("hidden"), 300);
-            /*document.getElementById("footer").setAttribute("hidden", true);*/
-        });
     },
 };

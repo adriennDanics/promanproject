@@ -2,14 +2,7 @@ body{
     background-image: url("background.jpg");
     background-size: 100%;
     background-repeat: no-repeat;
-}
-
-#new_board_box {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    text-align: right;
-    align-self: right;
+    background-attachment: fixed;
 }
 
 .fas {
@@ -24,12 +17,17 @@ body{
 
 .card {
     margin: 40px 40px 10px 10px;
-    box-shadow: 10px 10px 8px #888888
+    box-shadow: 10px 10px 8px #888888;
+    opacity: 0.5;
+}
+
+.card:hover {
+    opacity: 0.8;
 }
 
 .btn-outline-info, #new_board_box {
     background-color: #d4d5d7;
-    box-shadow: 10px 10px 8px #888888
+    box-shadow: 10px 10px 8px #888888;
 }
 
 h1 {
@@ -39,9 +37,21 @@ h1 {
     text-shadow: 2px 2px palegoldenrod;
 }
 
+#new_board_box.card {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    text-align: right;
+    align-self: right;
+}
+
 .footer {
-    width: 300px;
-    height: 100px;
+    height: 50px;
+    transition-duration: 0.300s;
+}
+
+.footer:hover {
+    height: 150pt;
     right: 20px;
     position: fixed;
     text-align: right;
@@ -51,7 +61,8 @@ h1 {
 
 #our-team {
     position: fixed;
-    text-align: left;
-    align-self: left;
-    display: block;
+    text-align: right;
+    align-self: right;
+    padding: 50px;
+    display: inline-block;
 }
