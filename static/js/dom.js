@@ -42,10 +42,34 @@ dom = {
             newDivForBoard.appendChild(editButton);
 
             let newDivForBoardDetails = document.createElement("div");
-            newDivForBoardDetails.classList.add("row", "card", "bg-info");
+            newDivForBoardDetails.classList.add("row", "bg-info");
             newDivForBoardDetails.setAttribute("id", "boarddetail" + boards[i].id);
             newDivForBoardDetails.setAttribute("hidden", true);
             newDivForBoard.appendChild(newDivForBoardDetails);
+
+            let statuses = dataHandler.getStatuses();
+            for (let j = 0; j < statuses.length; j++) {
+                let newStatusColumn = document.createElement("div");
+                newStatusColumn.classList.add("col", "bg-secondary");
+                newDivForBoardDetails.appendChild(newStatusColumn);
+
+                let newDivForCardsContainer = document.createElement("div");
+                newDivForCardsContainer.classList.add();
+                newDivForCardsContainer.setAttribute("id", "board"+boards[i].id+"-"+statuses[j].name);
+                newStatusColumn.appendChild(newDivForCardsContainer);
+
+                let cardsByBoardId = dataHandler.getCardsByBoardId(boards[i].id);
+                for (let k = 0; k < cardsByBoardId.length; k++) {
+                    if (cardsByBoardId[k].status_id === statuses[j].id) {
+                        let newDivForCards = document.createElement("div");
+                        newDivForCards.classList.add("card");
+                        newDivForCards.setAttribute("id", "card" + cardsByBoardId[k].id);
+                        newDivForCards.innerHTML = cardsByBoardId[k].title;
+                        newDivForCardsContainer.appendChild(newDivForCards);
+                    }
+                }
+            }
+
         }
 
     },
