@@ -5,6 +5,8 @@ dom = {
         dataHandler.getBoards(this.showBoards);
         this.addEventListenerToNewBoardIcon();
         this.addEventListenerToSaveNewBoardButton();
+        this.addEventListenerToBoardDetailButton();
+        this.addEventListenerToCloseBoardDetailButton();
         // retrieves boards and makes showBoards called
     },
     showBoards: function(boards) {
@@ -22,15 +24,27 @@ dom = {
             newDivForBoard.setAttribute("id", "board"+boards[i].id);
             boardDiv.appendChild(newDivForBoard);
 
-            let newButton = document.createElement("i");
-            newButton.classList.add("fas", "fa-angle-down");
-            newButton.setAttribute("id", "detail"+boards[i].id);
-            newDivForBoard.appendChild(newButton);
+            let detailButton = document.createElement("i");
+            detailButton.classList.add("fas", "fa-angle-down");
+            detailButton.setAttribute("id", "detail"+boards[i].id);
+            newDivForBoard.appendChild(detailButton);
+
+            let closeDetailButton = document.createElement("i");
+            closeDetailButton.classList.add("fas", "fa-angle-up");
+            closeDetailButton.setAttribute("id", "closedetail"+boards[i].id);
+            closeDetailButton.setAttribute("hidden", true);
+            newDivForBoard.appendChild(closeDetailButton);
 
             let editButton = document.createElement("i");
             editButton.classList.add("far", "fa-edit");
             editButton.setAttribute("id", "edit"+boards[i].id);
             newDivForBoard.appendChild(editButton);
+
+            let newDivForBoardDetails = document.createElement("div");
+            newDivForBoardDetails.classList.add("row", "card", "bg-info");
+            newDivForBoardDetails.setAttribute("id", "boarddetail" + boards[i].id);
+            newDivForBoardDetails.setAttribute("hidden", true);
+            newDivForBoard.appendChild(newDivForBoardDetails);
         }
 
     },
@@ -76,15 +90,40 @@ dom = {
         let newBoardTitle = document.getElementById("new_board_input_field").value;
         dataHandler.createNewBoard(newBoardTitle);
 
-        let boardDiv = document.getElementById("boards");
-        let newDivForBoard = document.createElement("div");
-            newDivForBoard.innerHTML = newBoardTitle;
-            newDivForBoard.classList.add("row", "card", "bg-info");
-            boardDiv.appendChild(newDivForBoard);
-
-        let newButton = document.createElement("i");
-        newButton.classList.add("fas", "fa-angle-down");
-        newDivForBoard.appendChild(newButton);
+        location.reload();
     },
 
+    addEventListenerToBoardDetailButton: function () {
+        let detailButtons = document.getElementsByClassName("fas fa-angle-down");
+        for (let i = 0; i < detailButtons.length; i++) {
+            detailButtons[i].addEventListener("click", function () {
+
+                let detailButtonId = detailButtons[i].id;
+                document.getElementById(detailButtonId).setAttribute("hidden", true);
+
+                let closeDetailButton = document.getElementById("closedetail" + detailButtonId.replace("detail",""));
+                closeDetailButton.removeAttribute("hidden");
+
+                let boardDetail = document.getElementById("boarddetail" + detailButtonId.replace("detail",""));
+                boardDetail.removeAttribute("hidden");
+                });
+        }
+    },
+
+        addEventListenerToCloseBoardDetailButton: function () {
+        let closeDetailButtons = document.getElementsByClassName("fas fa-angle-up");
+        for (let i = 0; i < closeDetailButtons.length; i++) {
+            closeDetailButtons[i].addEventListener("click", function () {
+                let closeDetailButtonId = closeDetailButtons[i].id;
+                document.getElementById(closeDetailButtonId).setAttribute("hidden", true);
+
+                let DetailButton = document.getElementById("detail" + closeDetailButtonId.replace("closedetail",""));
+                DetailButton.removeAttribute("hidden");
+
+                let boardDetail = document.getElementById("boarddetail" + closeDetailButtonId.replace("closedetail",""));
+                boardDetail.setAttribute("hidden", true);
+
+                });
+        }
+    },
 };
