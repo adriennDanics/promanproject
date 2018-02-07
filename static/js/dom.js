@@ -8,6 +8,7 @@ dom = {
         this.addEventListenerToBoardDetailButton();
         this.addEventListenerToCloseBoardDetailButton();
         this.addEventListenerToEditBoardTitle();
+        this.addEventListenerForDarkTheme()
         // retrieves boards and makes showBoards called
     },
     showBoards: function(boards) {
@@ -153,4 +154,45 @@ dom = {
             });
         }
     },
+    addEventListenerForDarkTheme: function () {
+        document.getElementById("dark-theme").addEventListener("click", function () {
+            let lettersFas = document.getElementsByClassName("fas");
+            for(let i=0;i<lettersFas.length;i++) {
+                lettersFas[i].classList.add("dark")
+            }
+            let lettersFar = document.getElementsByClassName("far");
+            for(let i=0;i<lettersFar.length;i++) {
+                lettersFar[i].classList.add("dark")
+            }
+            let cardsClass = document.getElementsByClassName("card");
+            for(let i=0;i<cardsClass.length;i++) {
+                cardsClass[i].classList.add("dark")
+            }
+            let newBoardButton = document.getElementsByClassName("btn-outline-info");
+            for(let i=0;i<newBoardButton.length;i++) {
+                newBoardButton[i].classList.add("dark")
+            }
+            let header = document.getElementsByTagName("h1");
+            for(let i=0;i<header.length;i++) {
+                header[i].classList.add("dark")
+            }
+            let cardsForBoards = document.getElementsByClassName("row");
+            for(let i=0;i<cardsForBoards.length;i++) {
+                cardsForBoards[i].classList.remove("bg-light");
+                cardsForBoards[i].classList.add("bg-dark")
+            }
+            let allDivs = document.getElementsByTagName("div");
+            for(let i=0;i<allDivs.length;i++) {
+                allDivs[i].classList.add("dark");
+            }
+            document.body.style.backgroundImage = "url('/static/css/almostblackground.jpg')";
+            let darkThemeButton = document.getElementById("dark-theme");
+            darkThemeButton.classList.add("bg-light");
+            darkThemeButton.classList.remove("bg-dark");
+            darkThemeButton.innerText="Light";
+            darkThemeButton.addEventListener("click", function () {
+               location.reload();
+            }, false)
+        });
+    }
 };
