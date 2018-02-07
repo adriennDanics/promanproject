@@ -19,7 +19,7 @@ dom = {
             let newDivForBoard = document.createElement("div");
             newDivForBoard.innerHTML = boards[i].title;
             newDivForBoard.classList.add("row", "card", "bg-info", "container");
-            newDivForBoard.setAttribute("id", boards[i].id);
+            newDivForBoard.setAttribute("id", "board"+boards[i].id);
             boardDiv.appendChild(newDivForBoard);
 
             let newButton = document.createElement("i");
