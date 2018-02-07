@@ -1,6 +1,7 @@
 body{
     background-image: url("background.jpg");
     background-size: 100%;
+    background-repeat: no-repeat;
 }
 
 #new_board_box {
@@ -22,13 +23,35 @@ body{
 }
 
 .card {
-    margin: 10px 10px 10px 10px;
+    margin: 40px 40px 10px 10px;
+    box-shadow: 10px 10px 8px #888888
 }
 
-.disabled {
-    pointer-events: none;
+.btn-outline-info, #new_board_box {
+    background-color: #d4d5d7;
+    box-shadow: 10px 10px 8px #888888
 }
 
 h1 {
-    padding: 20px;
+    font-size: 60pt;
+    padding: 20px 20px 20px 40px;
+    font-family: 'Pacifico', cursive;
+    text-shadow: 2px 2px palegoldenrod;
+}
+
+.footer {
+    width: 300px;
+    height: 100px;
+    right: 20px;
+    position: fixed;
+    text-align: right;
+    align-self: right;
+    display: inline-block;
+}
+
+#our-team {
+    position: fixed;
+    text-align: left;
+    align-self: left;
+    display: block;
 }
