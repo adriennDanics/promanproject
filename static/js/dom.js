@@ -3,20 +3,24 @@ dom = {
     loadBoards: function() {
         dataHandler.init();
         dataHandler.getBoards(this.showBoards);
-        this.newBoardAddEventListener();
+        this.addEventListenerToNewBoardIcon();
+        this.addEventListenerToSaveNewBoardButton();
         // retrieves boards and makes showBoards called
     },
     showBoards: function(boards) {
         // shows boards appending them to #boards div
         // it adds necessary event listeners also
         let numberOfBoards = boards.length;
+
         let boardDiv = document.getElementById("boards");
         boardDiv.innerHTML = "";
+
         for(let i=0; i<numberOfBoards; i++){
             let newDivForBoard = document.createElement("div");
             newDivForBoard.innerHTML = boards[i].title;
             newDivForBoard.classList.add("row", "card", "bg-info");
             boardDiv.appendChild(newDivForBoard);
+
             let newButton = document.createElement("i");
             newButton.classList.add("fas", "fa-angle-down");
             newDivForBoard.appendChild(newButton);
@@ -31,30 +35,48 @@ dom = {
         // it adds necessary event listeners also
     },
     // here comes more features
-    newBoardAddEventListener: function () {
-        document.getElementById("new_board_button").addEventListener("click", function () {
-            let elementToDelete = document.getElementById("new_board_text");
-            elementToDelete.parentElement.removeChild(elementToDelete);
-            let newBoardInput = document.createElement("input");
-            newBoardInput.classList.add("form-control");
-            newBoardInput.setAttribute("id", "new_board_input_field");
-            document.getElementById("new_board_box").appendChild(newBoardInput);
-            let saveNewBoardButton = document.createElement("button");
-            saveNewBoardButton.classList.add("btn", "btn-outline-info");
-            saveNewBoardButton.setAttribute("id", "save_new_board_button");
-            saveNewBoardButton.innerHTML = "Save Board";
-            document.getElementById("new_board_box").appendChild(saveNewBoardButton);
-            document.getElementById("save_new_board_button").addEventListener("click", function () {
-            let newBoardTitle = document.getElementById("new_board_input_field").value;
-            dataHandler.createNewBoard(newBoardTitle, this.showBoards)
-        });
-        });
+    addEventListenerToNewBoardIcon: function () {
+        document.getElementById("new_board_icon").addEventListener("click",this.handleClickOnNewBoardIcon)
     },
-    
-    //saveBoardAddEventListener: function () {
-        //document.getElementById("save_new_board_button").addEventListener("click", function () {
-            //let newBoardTitle = document.getElementById("new_board_input_field").value;
-            //dataHandler.createNewBoard(newBoardTitle, this.loadBoards())
-        //})
-    //},
+
+    addEventListenerToSaveNewBoardButton: function () {
+        document.getElementById("save_new_board_button").addEventListener("click", this.handleClickOnSaveNewBoardButton)
+    },
+
+    handleClickOnNewBoardIcon: function () {
+        document.getElementById("new_board_input_field").value = "";
+
+        let newBoardText = document.getElementById("new_board_text");
+        newBoardText.setAttribute("hidden", true);
+
+        let newBoardInput = document.getElementById("new_board_input_field");
+        newBoardInput.removeAttribute("hidden");
+
+        let saveNewBoardButton = document.getElementById("save_new_board_button");
+        saveNewBoardButton.removeAttribute("hidden");
+    },
+
+    handleClickOnSaveNewBoardButton: function () {
+        let newBoardText = document.getElementById("new_board_text");
+        newBoardText.removeAttribute("hidden");
+
+        let newBoardInput = document.getElementById("new_board_input_field");
+        newBoardInput.setAttribute("hidden", true);
+
+        let saveNewBoardButton = document.getElementById("save_new_board_button");
+        saveNewBoardButton.setAttribute("hidden", true);
+
+        let newBoardTitle = document.getElementById("new_board_input_field").value;
+        dataHandler.createNewBoard(newBoardTitle);
+
+        let boardDiv = document.getElementById("boards");
+        let newDivForBoard = document.createElement("div");
+            newDivForBoard.innerHTML = newBoardTitle;
+            newDivForBoard.classList.add("row", "card", "bg-info");
+            boardDiv.appendChild(newDivForBoard);
+
+        let newButton = document.createElement("i");
+        newButton.classList.add("fas", "fa-angle-down");
+        newDivForBoard.appendChild(newButton);
+    },
 };

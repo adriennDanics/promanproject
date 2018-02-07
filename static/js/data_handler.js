@@ -39,7 +39,7 @@ dataHandler = {
     getCard: function(cardId, callback) {
         // the card is retrieved and then the callback function is called with the card
     },
-    createNewBoard: function(boardTitle, callback) {
+    createNewBoard: function(boardTitle) {
         // creates new board, saves it and calls the callback function with its data
         let existingBoardIDs = [];
         for (let i = 0; i < this._data.boards.length; i++) {
@@ -53,9 +53,6 @@ dataHandler = {
         };
         this._data.boards.push(newBoard);
         this._saveData();
-        dom.showBoards(this._data.boards);
-        callback(newBoard)
-
     },
     createNewCard: function(cardTitle, boardId, statusId, callback) {
         // creates new card, saves it and calls the callback function with its data
