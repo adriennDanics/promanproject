@@ -70,15 +70,23 @@ dataHandler = {
             callback(cardsByBoardId);
         }
     },
-    getCard: function(cardId, callback) {
+    getCard: function(cardId, callback="default") {
         // the card is retrieved and then the callback function is called with the card
         let cards = this._data.cards;
         let card;
         for (let i = 0; i < cards.length; i++) {
             if (cards[i].id === cardId) {
                 card = cards[i];
-                callback(card);
             }
+        }
+        if( callback === "default"){
+
+            return card
+
+        } else {
+
+            callback(card)
+
         }
     },
     createNewBoard: function(boardTitle) {
@@ -104,6 +112,20 @@ dataHandler = {
         let board = this.getBoard(boardID);
         board.title=newTitle;
         this._saveData();
-    }
+    },
+    getTheme: function (callback) {
+        callback(this._data.theme);
+    },
+    setTheme: function (theme) {
+        this._data.theme = theme;
+        this._saveData();
+    },
     // here comes more features
+
+    editCardTitle: function (newTitle, cardID) {
+        let card = this.getCard(cardID);
+        card.title = newTitle;
+        this._saveData();
+
+    },
 };
