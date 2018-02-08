@@ -3,12 +3,14 @@ dom = {
     loadBoards: function() {
         dataHandler.init();
         dataHandler.getBoards(this.showBoards);
+        dataHandler.getTheme(this.themeHandler);
         this.addEventListenerToNewBoardIcon();
         this.addEventListenerToSaveNewBoardButton();
-        this.addEventListenerToEditBoardTitle();
         this.addEventListenerToBoardDetailButton();
         this.addEventListenerToCloseBoardDetailButton();
         this.addEventListenerToEditCardTitle();
+        this.addEventListenerToEditBoardTitle();
+        this.addEventListenerForDarkTheme();
         // retrieves boards and makes showBoards called
     },
     showBoards: function(boards) {
@@ -22,7 +24,7 @@ dom = {
         for(let i=0; i<numberOfBoards; i++){
             let newDivForBoard = document.createElement("div");
             newDivForBoard.innerHTML = boards[i].title;
-            newDivForBoard.classList.add("row", "card", "bg-info", "container");
+            newDivForBoard.classList.add("row", "card", "bg-light", "container");
             newDivForBoard.setAttribute("id", "board"+boards[i].id);
             boardDiv.appendChild(newDivForBoard);
 
@@ -117,6 +119,9 @@ dom = {
     },
 
 
+    addEventListenerForDarkTheme: function (){
+        document.getElementById("dark-theme").addEventListener("click", this.handleEventListenerForDarkTheme, false)
+    },
     handleClickOnNewBoardIcon: function () {
         document.getElementById("new_board_input_field").value = "";
 
@@ -167,6 +172,7 @@ dom = {
         let boardID = Number(this.parentElement.getAttribute("id").replace("board",""));
         let editTitleInput = document.createElement("input");
         this.parentElement.appendChild(editTitleInput);
+        this.setAttribute("hidden", true);
         editTitleInput.setAttribute("placeholder", "New Title");
         editTitleInput.setAttribute("type", "text");
         editTitleInput.setAttribute("id", "edit-input-field"+boardID);
@@ -195,7 +201,99 @@ dom = {
                 let boardDetail = document.getElementById("boarddetail" + closeDetailButtonId.replace("closedetail",""));
                 boardDetail.setAttribute("hidden", true);
 
-                });
+            });
+        }
+    },
+    handleEventListenerForDarkTheme: function () {
+        dataHandler.setTheme("dark");
+        let lettersFas = document.getElementsByClassName("fas");
+        for(let i=0;i<lettersFas.length;i++) {
+            lettersFas[i].classList.add("dark")
+        }
+        let lettersFar = document.getElementsByClassName("far");
+        for(let i=0;i<lettersFar.length;i++) {
+            lettersFar[i].classList.add("dark")
+        }
+        let cardsClass = document.getElementsByClassName("card");
+        for(let i=0;i<cardsClass.length;i++) {
+            cardsClass[i].classList.add("dark")
+        }
+        let newBoardButton = document.getElementsByClassName("btn-outline-info");
+        for(let i=0;i<newBoardButton.length;i++) {
+            newBoardButton[i].classList.add("dark")
+        }
+        let header = document.getElementsByTagName("h1");
+        for(let i=0;i<header.length;i++) {
+            header[i].classList.add("dark")
+        }
+        let cardsForBoards = document.getElementsByClassName("row");
+        for(let i=0;i<cardsForBoards.length;i++) {
+            cardsForBoards[i].classList.remove("bg-light");
+            cardsForBoards[i].classList.add("bg-dark")
+        }
+        let allDivs = document.getElementsByTagName("div");
+        for(let i=0;i<allDivs.length;i++) {
+            allDivs[i].classList.add("dark");
+        }
+        document.body.style.backgroundImage = "url('/static/css/almostblackground.jpg')";
+        let darkThemeButton = document.getElementById("dark-theme");
+        darkThemeButton.classList.add("bg-light");
+        darkThemeButton.classList.remove("bg-dark");
+        darkThemeButton.innerText="Light";
+        darkThemeButton.addEventListener("click", function () {
+            dataHandler.setTheme("light");
+            dom.handleEventListenerForLightTheme();
+        }, false)
+    },
+    handleEventListenerForLightTheme:function () {
+        debugger;
+        dataHandler.setTheme("light");
+            let lettersFas = document.getElementsByClassName("fas");
+            for(let i=0;i<lettersFas.length;i++) {
+                lettersFas[i].classList.remove("dark")
+            }
+            let lettersFar = document.getElementsByClassName("far");
+            for(let i=0;i<lettersFar.length;i++) {
+                lettersFar[i].classList.remove("dark")
+            }
+            let cardsClass = document.getElementsByClassName("card");
+            for(let i=0;i<cardsClass.length;i++) {
+                cardsClass[i].classList.remove("dark")
+            }
+            let newBoardButton = document.getElementsByClassName("btn-outline-info");
+            for(let i=0;i<newBoardButton.length;i++) {
+                newBoardButton[i].classList.remove("dark")
+            }
+            let header = document.getElementsByTagName("h1");
+            for(let i=0;i<header.length;i++) {
+                header[i].classList.remove("dark")
+            }
+            let cardsForBoards = document.getElementsByClassName("row");
+            for(let i=0;i<cardsForBoards.length;i++) {
+                cardsForBoards[i].classList.add("bg-light");
+                cardsForBoards[i].classList.remove("bg-dark")
+            }
+            let allDivs = document.getElementsByTagName("div");
+            for(let i=0;i<allDivs.length;i++) {
+                allDivs[i].classList.remove("dark");
+            }
+            document.body.style.backgroundImage = "url('/static/css/background.jpg')";
+            let darkThemeButton = document.getElementById("dark-theme");
+            darkThemeButton.classList.remove("bg-light");
+            darkThemeButton.classList.add("bg-dark");
+            darkThemeButton.innerText="Dark";
+            darkThemeButton.addEventListener("click", function () {
+                dataHandler.setTheme("dark");
+                dom.handleEventListenerForDarkTheme();
+            }, false)
+    },
+    themeHandler: function (theme) {
+        if(theme === "dark") {
+            debugger;
+            dom.handleEventListenerForDarkTheme();
+        } else {
+            debugger;
+            dom.handleEventListenerForLightTheme()
         }
     },
 

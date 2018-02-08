@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
               integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
         <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
                 integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous" defer></script>
@@ -22,6 +23,7 @@
     <body>
         <div class="row">
             <h1>ProMan</h1>
+            <div class="btn bg-dark" id="dark-theme">Dark</div>
             <div class="card" id="new_board_box">
                 <i class="fas fa-plus" id="new_board_icon"></i>
                 <div id="new_board_text">New Board</div>
@@ -30,5 +32,14 @@
             </div>
         </div>
         <div class="container" id="boards"></div>
+        <div class="fixed-bottom footer">
+            <img class="footer" src="/static/css/Logomakr_1l87cp.png" alt="BaD-logo">
+        </div>
+        <div class="fixed-bottom footer" id="our-team">
+            <p><i>Powered by determination and coffee</i></p>
+            <p>Dávid</p>
+            <p>Kondi</p>
+            <p>Adrienn</p>
+        </div>
     </body>
 </html>

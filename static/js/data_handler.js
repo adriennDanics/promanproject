@@ -113,13 +113,19 @@ dataHandler = {
         board.title=newTitle;
         this._saveData();
     },
-
+    getTheme: function (callback) {
+        callback(this._data.theme);
+    },
+    setTheme: function (theme) {
+        this._data.theme = theme;
+        this._saveData();
+    },
     // here comes more features
-    
+
     editCardTitle: function (newTitle, cardID) {
         let card = this.getCard(cardID);
         card.title = newTitle;
         this._saveData();
-        
+
     },
 };
