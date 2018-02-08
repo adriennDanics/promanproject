@@ -155,7 +155,7 @@ dataHandler = {
     },
 
     sortCardsInBoards: function () {
-        let allCardsInAllBoards = this._data.cards;
+        let allCardsInAllBoards = dataHandler._data.cards;
         allCardsInAllBoards.sort(function (a, b) {
             return a.order - b.order
         });

@@ -2,9 +2,9 @@
 dom = {
     loadBoards: function() {
         dataHandler.init();
+        dataHandler.sortCardsInBoards();
         dataHandler.getBoards(this.showBoards);
         dataHandler.getTheme(this.themeHandler);
-        dataHandler.sortCardsInBoards();
         this.addEventListenerToNewBoardIcon();
         this.addEventListenerToSaveNewBoardButton();
         this.addEventListenerToBoardDetailButton();
@@ -356,11 +356,28 @@ dom = {
 
     handleCardDrop: function (drake) {
         drake.on('drop', function(el, target, source, sibling) {
-            let cardID = Number(el.id.replace("card", ""));
-            let card = dataHandler.getCard(cardID);
+            let cardId = Number(el.id.replace("card", ""));
+            let card = dataHandler.getCard(cardId);
             let statusName = target.firstChild.id.replace("status","");
             let status = dataHandler.getStatusIDByName(statusName);
             card.status_id = status.id;
+
+            dataHandler._saveData();
+
+            if (sibling === null) {
+                let boardId = card.board_id;
+                let cardsForThisBoard = dataHandler.getCardsByBoardId(Number(boardId));
+                let orderForThisBoard = [];
+                for (let i = 0; i < cardsForThisBoard.length; i++) {
+                    orderForThisBoard.push(cardsForThisBoard[i].order);
+                }
+                card.order = Math.max(...orderForThisBoard) + 1;
+            } else {
+                let droppedBeforeCardId = Number(sibling.id.replace("card", ""));
+                let droppedBeforeCard = dataHandler.getCard(droppedBeforeCardId);
+                card.order = droppedBeforeCard.id - 1;
+            }
+
             dataHandler._saveData();
         });
     },
