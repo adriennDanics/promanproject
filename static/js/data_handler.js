@@ -35,10 +35,14 @@ dataHandler = {
             }
         }
     },
-    getStatuses: function(callback) {
+    getStatuses: function(callback = "default") {
         // the statuses are retrieved and then the callback function is called with the statuses
         let statuses = this._data.statuses;
-        callback(statuses);
+        if ( callback === "default") {
+            return statuses;
+        } else {
+            callback(statuses);
+        }
     },
     getStatus: function(statusId, callback) {
         // the status is retrieved and then the callback function is called with the status
@@ -51,7 +55,7 @@ dataHandler = {
             }
         }
     },
-    getCardsByBoardId: function(boardId, callback) {
+    getCardsByBoardId: function(boardId, callback="default") {
         // the cards are retrieved and then the callback function is called with the cards
         let cards = this._data.cards;
         let cardsByBoardId = [];
@@ -60,7 +64,11 @@ dataHandler = {
                 cardsByBoardId.push(cards[i])
             }
         }
-        callback(cardsByBoardId);
+        if ( callback === "default") {
+            return cardsByBoardId;
+        } else {
+            callback(cardsByBoardId);
+        }
     },
     getCard: function(cardId, callback) {
         // the card is retrieved and then the callback function is called with the card
