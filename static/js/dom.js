@@ -3,13 +3,14 @@ dom = {
     loadBoards: function() {
         dataHandler.init();
         dataHandler.getBoards(this.showBoards);
+        dataHandler.getTheme(this.themeHandler);
         this.addEventListenerToNewBoardIcon();
         this.addEventListenerToSaveNewBoardButton();
-        this.addEventListenerToEditBoardTitle();
         this.addEventListenerToBoardDetailButton();
         this.addEventListenerToCloseBoardDetailButton();
+        this.addEventListenerToEditCardTitle();
         this.addEventListenerToEditBoardTitle();
-        this.addEventListenerForDarkTheme()
+        this.addEventListenerForDarkTheme();
         // retrieves boards and makes showBoards called
     },
     showBoards: function(boards) {
@@ -66,15 +67,25 @@ dom = {
                 newDivForCardsContainer.setAttribute("id", "board"+boards[i].id+"-"+statuses[j].name);
                 newStatusColumn.appendChild(newDivForCardsContainer);
 
+                let newDivForCardsContainerStatus = document.createElement("div");
+                newDivForCardsContainerStatus.classList.add("status");
+                newDivForCardsContainerStatus.setAttribute("id", "status" + statuses[j].name);
+                newDivForCardsContainerStatus.innerHTML = statuses[j].name;
+                newDivForCardsContainer.appendChild(newDivForCardsContainerStatus);
 
                 let cardsByBoardId = dataHandler.getCardsByBoardId(boards[i].id);
                 for (let k = 0; k < cardsByBoardId.length; k++) {
                     if (cardsByBoardId[k].status_id === statuses[j].id) {
                         let newDivForCards = document.createElement("div");
-                        newDivForCards.classList.add("card","new");
+                        newDivForCards.classList.add("card", "new");
                         newDivForCards.setAttribute("id", "card" + cardsByBoardId[k].id);
                         newDivForCards.innerHTML = cardsByBoardId[k].title;
                         newDivForCardsContainer.appendChild(newDivForCards);
+
+                        let newDivForCardEdit = document.createElement("i");
+                        newDivForCardEdit.classList.add("fas", "fa-edit", "forcards");
+                        newDivForCardEdit.setAttribute("id", "cardEdit" + cardsByBoardId[k].id);
+                        newDivForCards.appendChild(newDivForCardEdit)
                     }
                 }
             }
@@ -99,12 +110,24 @@ dom = {
     },
 
     addEventListenerToEditBoardTitle: function () {
-        let editableBoard = document.getElementsByClassName("fa-edit");
+        let editableBoard = document.getElementsByClassName("far fa-edit");
         for(let i=0; i<editableBoard.length; i++){
             editableBoard[i].addEventListener("click", this.handleClickOnEditBoardTitle)
         }
     },
 
+    addEventListenerToEditCardTitle: function () {
+        let editableCard = document.getElementsByClassName("fas fa-edit");
+        for( let i = 0; i < editableCard.length; i++){
+            editableCard[i].addEventListener("click", this.handleClickOnEditCardTitle)
+        }
+
+    },
+
+
+    addEventListenerForDarkTheme: function (){
+        document.getElementById("dark-theme").addEventListener("click", this.handleEventListenerForDarkTheme, false)
+    },
     handleClickOnNewBoardIcon: function () {
         document.getElementById("new_board_input_field").value = "";
 
@@ -194,8 +217,9 @@ dom = {
             let newBoardTitle = document.getElementById("edit-input-field"+boardID).value;
             dataHandler.editBoardTitle(newBoardTitle, boardID);
             location.reload();
-        }, false);
+        });
     },
+
     addEventListenerToCloseBoardDetailButton: function () {
         let closeDetailButtons = document.getElementsByClassName("fas fa-angle-up");
         for (let i = 0; i < closeDetailButtons.length; i++) {
@@ -214,47 +238,115 @@ dom = {
             });
         }
     },
-    addEventListenerForDarkTheme: function () {
-        document.getElementById("dark-theme").addEventListener("click", function () {
+    handleEventListenerForDarkTheme: function () {
+        dataHandler.setTheme("dark");
+        let lettersFas = document.getElementsByClassName("fas");
+        for(let i=0;i<lettersFas.length;i++) {
+            lettersFas[i].classList.add("dark")
+        }
+        let lettersFar = document.getElementsByClassName("far");
+        for(let i=0;i<lettersFar.length;i++) {
+            lettersFar[i].classList.add("dark")
+        }
+        let cardsClass = document.getElementsByClassName("card");
+        for(let i=0;i<cardsClass.length;i++) {
+            cardsClass[i].classList.add("dark")
+        }
+        let newBoardButton = document.getElementsByClassName("btn-outline-info");
+        for(let i=0;i<newBoardButton.length;i++) {
+            newBoardButton[i].classList.add("dark")
+        }
+        let header = document.getElementsByTagName("h1");
+        for(let i=0;i<header.length;i++) {
+            header[i].classList.add("dark")
+        }
+        let cardsForBoards = document.getElementsByClassName("row");
+        for(let i=0;i<cardsForBoards.length;i++) {
+            cardsForBoards[i].classList.remove("bg-light");
+            cardsForBoards[i].classList.add("bg-dark")
+        }
+        let allDivs = document.getElementsByTagName("div");
+        for(let i=0;i<allDivs.length;i++) {
+            allDivs[i].classList.add("dark");
+        }
+        document.body.style.backgroundImage = "url('/static/css/almostblackground.jpg')";
+        let darkThemeButton = document.getElementById("dark-theme");
+        darkThemeButton.classList.add("bg-light");
+        darkThemeButton.classList.remove("bg-dark");
+        darkThemeButton.innerText="Light";
+        darkThemeButton.addEventListener("click", function () {
+            dataHandler.setTheme("light");
+            dom.handleEventListenerForLightTheme();
+        }, false)
+    },
+    handleEventListenerForLightTheme:function () {
+        debugger;
+        dataHandler.setTheme("light");
             let lettersFas = document.getElementsByClassName("fas");
             for(let i=0;i<lettersFas.length;i++) {
-                lettersFas[i].classList.add("dark")
+                lettersFas[i].classList.remove("dark")
             }
             let lettersFar = document.getElementsByClassName("far");
             for(let i=0;i<lettersFar.length;i++) {
-                lettersFar[i].classList.add("dark")
+                lettersFar[i].classList.remove("dark")
             }
             let cardsClass = document.getElementsByClassName("card");
             for(let i=0;i<cardsClass.length;i++) {
-                cardsClass[i].classList.add("dark")
+                cardsClass[i].classList.remove("dark")
             }
             let newBoardButton = document.getElementsByClassName("btn-outline-info");
             for(let i=0;i<newBoardButton.length;i++) {
-                newBoardButton[i].classList.add("dark")
+                newBoardButton[i].classList.remove("dark")
             }
             let header = document.getElementsByTagName("h1");
             for(let i=0;i<header.length;i++) {
-                header[i].classList.add("dark")
+                header[i].classList.remove("dark")
             }
             let cardsForBoards = document.getElementsByClassName("row");
             for(let i=0;i<cardsForBoards.length;i++) {
-                cardsForBoards[i].classList.remove("bg-light");
-                cardsForBoards[i].classList.add("bg-dark")
+                cardsForBoards[i].classList.add("bg-light");
+                cardsForBoards[i].classList.remove("bg-dark")
             }
             let allDivs = document.getElementsByTagName("div");
             for(let i=0;i<allDivs.length;i++) {
-                allDivs[i].classList.add("dark");
+                allDivs[i].classList.remove("dark");
             }
-            document.body.style.backgroundImage = "url('/static/css/almostblackground.jpg')";
-
+            document.body.style.backgroundImage = "url('/static/css/background.jpg')";
             let darkThemeButton = document.getElementById("dark-theme");
-            darkThemeButton.classList.add("bg-light");
-            darkThemeButton.classList.remove("bg-dark");
-            darkThemeButton.innerText="Light";
-
+            darkThemeButton.classList.remove("bg-light");
+            darkThemeButton.classList.add("bg-dark");
+            darkThemeButton.innerText="Dark";
             darkThemeButton.addEventListener("click", function () {
-               location.reload();
+                dataHandler.setTheme("dark");
+                dom.handleEventListenerForDarkTheme();
             }, false)
+    },
+    themeHandler: function (theme) {
+        if(theme === "dark") {
+            debugger;
+            dom.handleEventListenerForDarkTheme();
+        } else {
+            debugger;
+            dom.handleEventListenerForLightTheme()
+        }
+    },
+
+    handleClickOnEditCardTitle: function () {
+        let cardID = Number(this.getAttribute("id").replace("cardEdit", ""));
+        let editCardTitleinput = document.createElement("input");
+        this.parentElement.appendChild(editCardTitleinput);
+        editCardTitleinput.setAttribute("placeholder", "New card title");
+        editCardTitleinput.setAttribute("type", "text");
+        editCardTitleinput.setAttribute("id", "edit-card-input-field" + cardID);
+        editCardTitleinput.setAttribute("class", "form-control");
+        let saveEditButton = document.createElement("button");
+        this.parentElement.appendChild(saveEditButton);
+        saveEditButton.setAttribute("class", "btn");
+        saveEditButton.innerHTML = "Save";
+        saveEditButton.addEventListener("click", function () {
+            let newCardTitle = document.getElementById("edit-card-input-field"+cardID).value;
+            dataHandler.editCardTitle(newCardTitle, cardID);
+            location.reload();
         });
     }
 };

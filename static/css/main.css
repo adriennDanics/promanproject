@@ -129,6 +129,6 @@ div#dark-theme {
     color: black;
 }
 
-.fas.fa-plus.card.dark {
+.fas.fa-plus.card.dark, .fas.fa-edit.forcards.dark {
     color: black;
 }
