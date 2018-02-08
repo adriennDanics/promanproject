@@ -2,6 +2,7 @@
 dom = {
     loadBoards: function() {
         dataHandler.init();
+        dataHandler.sortCardsInBoards();
         dataHandler.getBoards(this.showBoards);
         dataHandler.getTheme(this.themeHandler);
         this.addEventListenerToNewBoardIcon();
@@ -95,9 +96,9 @@ dom = {
             for (let l = 0; l < newDivForBoardDetails.childNodes.length; l++) {
                 cardContainerListForBoard.push(newDivForBoardDetails.childNodes[l].firstChild)
             }
-            drag.addDragNDrop(cardContainerListForBoard)
+            let drake = drag.addDragNDrop(cardContainerListForBoard);
+            dom.handleCardDrop(drake);
         }
-
     },
     loadCards: function(boardId) {
         // retrieves cards and makes showCards called
@@ -372,5 +373,33 @@ dom = {
                 Card.appendChild(newiForCardEdit);
                 dom.addEventListenerToEditCardTitle();
         });
-    }
+    },
+
+    handleCardDrop: function (drake) {
+        drake.on('drop', function(el, target, source, sibling) {
+            let cardId = Number(el.id.replace("card", ""));
+            let card = dataHandler.getCard(cardId);
+            let statusName = target.firstChild.id.replace("status","");
+            let status = dataHandler.getStatusIDByName(statusName);
+            card.status_id = status.id;
+
+            dataHandler._saveData();
+
+            if (sibling === null) {
+                let boardId = card.board_id;
+                let cardsForThisBoard = dataHandler.getCardsByBoardId(Number(boardId));
+                let orderForThisBoard = [];
+                for (let i = 0; i < cardsForThisBoard.length; i++) {
+                    orderForThisBoard.push(cardsForThisBoard[i].order);
+                }
+                card.order = Math.max(...orderForThisBoard) + 1;
+            } else {
+                let droppedBeforeCardId = Number(sibling.id.replace("card", ""));
+                let droppedBeforeCard = dataHandler.getCard(droppedBeforeCardId);
+                card.order = droppedBeforeCard.id - 1;
+            }
+
+            dataHandler._saveData();
+        });
+    },
 };

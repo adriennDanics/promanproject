@@ -49,17 +49,26 @@ h1 {
 }
 
 .footer {
-    height: 50px;
+    height: 1px;
+    position: fixed;
+    bottom:10px;
+    right: 20px;
     transition-duration: 0.300s;
 }
 
 .footer:hover {
-    height: 150pt;
+    height: 200px;
     right: 20px;
     position: fixed;
     text-align: right;
     align-self: right;
     display: inline-block;
+}
+
+img.footer {
+    height: 50px;
+    bottom:10px;
+    left: 20px;
 }
 
 #our-team {

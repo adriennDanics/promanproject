@@ -44,17 +44,22 @@ dataHandler = {
             callback(statuses);
         }
     },
-    getStatus: function(statusId, callback) {
+    getStatusIDByName: function(statusName, callback="default") {
         // the status is retrieved and then the callback function is called with the status
         let statuses = this._data.statuses;
         let status;
         for (let i = 0; i < statuses.length; i++) {
-            if (statuses[i].id === statusId) {
+            if (statuses[i].name === statusName) {
                 status = statuses[i];
-                callback(status);
             }
         }
+        if( callback === "default"){
+            return status
+        } else {
+            callback(status)
+        }
     },
+
     getCardsByBoardId: function(boardId, callback="default") {
         // the cards are retrieved and then the callback function is called with the cards
         let cards = this._data.cards;
@@ -111,12 +116,18 @@ dataHandler = {
             existingCardIDs.push(this._data.cards[i].id);
         }
         let newCardID = Math.max(...existingCardIDs) + 1;
+        let cardsForThisBoard = this.getCardsByBoardId(Number(boardId));
+        let orderForThisBoard = [];
+        for (let i = 0; i < cardsForThisBoard.length; i++) {
+            orderForThisBoard.push(cardsForThisBoard[i].order);
+        }
+        let newCardOrder = Math.max(...orderForThisBoard) + 1;
         let newCard = {
             "id": newCardID,
             "title": cardTitle,
             "board_id": Number(boardId),
             "status_id": statusId,
-            "order": ""
+            "order": Number(newCardOrder)
         };
         this._data.cards.push(newCard);
         this._saveData();
@@ -141,5 +152,12 @@ dataHandler = {
         card.title = newTitle;
         this._saveData();
 
+    },
+
+    sortCardsInBoards: function () {
+        let allCardsInAllBoards = dataHandler._data.cards;
+        allCardsInAllBoards.sort(function (a, b) {
+            return a.order - b.order
+        });
     },
 };
