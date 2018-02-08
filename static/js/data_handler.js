@@ -116,12 +116,18 @@ dataHandler = {
             existingCardIDs.push(this._data.cards[i].id);
         }
         let newCardID = Math.max(...existingCardIDs) + 1;
+        let cardsForThisBoard = this.getCardsByBoardId(Number(boardId));
+        let orderForThisBoard = [];
+        for (let i = 0; i < cardsForThisBoard.length; i++) {
+            orderForThisBoard.push(cardsForThisBoard[i].order);
+        }
+        let newCardOrder = Math.max(...orderForThisBoard) + 1;
         let newCard = {
             "id": newCardID,
             "title": cardTitle,
             "board_id": Number(boardId),
             "status_id": statusId,
-            "order": ""
+            "order": Number(newCardOrder)
         };
         this._data.cards.push(newCard);
         this._saveData();
@@ -146,5 +152,12 @@ dataHandler = {
         card.title = newTitle;
         this._saveData();
 
+    },
+
+    sortCardsInBoards: function () {
+        let allCardsInAllBoards = this._data.cards;
+        allCardsInAllBoards.sort(function (a, b) {
+            return a.order - b.order
+        });
     },
 };

@@ -4,6 +4,7 @@ dom = {
         dataHandler.init();
         dataHandler.getBoards(this.showBoards);
         dataHandler.getTheme(this.themeHandler);
+        dataHandler.sortCardsInBoards();
         this.addEventListenerToNewBoardIcon();
         this.addEventListenerToSaveNewBoardButton();
         this.addEventListenerToBoardDetailButton();
@@ -286,7 +287,6 @@ dom = {
         }, false)
     },
     handleEventListenerForLightTheme:function () {
-        debugger;
         dataHandler.setTheme("light");
             let lettersFas = document.getElementsByClassName("fas");
             for(let i=0;i<lettersFas.length;i++) {
@@ -329,10 +329,8 @@ dom = {
     },
     themeHandler: function (theme) {
         if(theme === "dark") {
-            debugger;
             dom.handleEventListenerForDarkTheme();
         } else {
-            debugger;
             dom.handleEventListenerForLightTheme()
         }
     },
