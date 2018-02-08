@@ -3,7 +3,7 @@ dom = {
     loadBoards: function() {
         dataHandler.init();
         dataHandler.getBoards(this.showBoards);
-        dataHandler.passOnLastClicked(this.themeHandler);
+        dataHandler.getTheme(this.themeHandler);
         this.addEventListenerToNewBoardIcon();
         this.addEventListenerToSaveNewBoardButton();
         this.addEventListenerToBoardDetailButton();
@@ -158,7 +158,7 @@ dom = {
         }
     },
     handleEventListenerForDarkTheme: function () {
-        localStorage.setItem("lastClicked", JSON.stringify("dark"));
+        dataHandler.setTheme("dark");
         let lettersFas = document.getElementsByClassName("fas");
         for(let i=0;i<lettersFas.length;i++) {
             lettersFas[i].classList.add("dark")
@@ -194,15 +194,59 @@ dom = {
         darkThemeButton.classList.remove("bg-dark");
         darkThemeButton.innerText="Light";
         darkThemeButton.addEventListener("click", function () {
-            localStorage.setItem("lastClicked", JSON.stringify("light"));
-            location.reload();
+            dataHandler.setTheme("light");
+            dom.handleEventListenerForLightTheme();
         }, false)
     },
-
-    themeHandler: function (lastClicked) {
-        if(lastClicked === "dark") {
-            let theChosen = document.getElementById("dark-theme");
-            /*this.handleEventListenerForDarkTheme();*/
+    handleEventListenerForLightTheme:function () {
+        debugger;
+        dataHandler.setTheme("light");
+            let lettersFas = document.getElementsByClassName("fas");
+            for(let i=0;i<lettersFas.length;i++) {
+                lettersFas[i].classList.remove("dark")
+            }
+            let lettersFar = document.getElementsByClassName("far");
+            for(let i=0;i<lettersFar.length;i++) {
+                lettersFar[i].classList.remove("dark")
+            }
+            let cardsClass = document.getElementsByClassName("card");
+            for(let i=0;i<cardsClass.length;i++) {
+                cardsClass[i].classList.remove("dark")
+            }
+            let newBoardButton = document.getElementsByClassName("btn-outline-info");
+            for(let i=0;i<newBoardButton.length;i++) {
+                newBoardButton[i].classList.remove("dark")
+            }
+            let header = document.getElementsByTagName("h1");
+            for(let i=0;i<header.length;i++) {
+                header[i].classList.remove("dark")
+            }
+            let cardsForBoards = document.getElementsByClassName("row");
+            for(let i=0;i<cardsForBoards.length;i++) {
+                cardsForBoards[i].classList.add("bg-light");
+                cardsForBoards[i].classList.remove("bg-dark")
+            }
+            let allDivs = document.getElementsByTagName("div");
+            for(let i=0;i<allDivs.length;i++) {
+                allDivs[i].classList.remove("dark");
+            }
+            document.body.style.backgroundImage = "url('/static/css/background.jpg')";
+            let darkThemeButton = document.getElementById("dark-theme");
+            darkThemeButton.classList.remove("bg-light");
+            darkThemeButton.classList.add("bg-dark");
+            darkThemeButton.innerText="Dark";
+            darkThemeButton.addEventListener("click", function () {
+                dataHandler.setTheme("dark");
+                dom.handleEventListenerForDarkTheme();
+            }, false)
+    },
+    themeHandler: function (theme) {
+        if(theme === "dark") {
+            debugger;
+            dom.handleEventListenerForDarkTheme();
+        } else {
+            debugger;
+            dom.handleEventListenerForLightTheme()
         }
     },
 };
