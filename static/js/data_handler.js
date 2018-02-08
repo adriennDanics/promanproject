@@ -35,10 +35,14 @@ dataHandler = {
             }
         }
     },
-    getStatuses: function(callback) {
+    getStatuses: function(callback = "default") {
         // the statuses are retrieved and then the callback function is called with the statuses
         let statuses = this._data.statuses;
-        callback(statuses);
+        if ( callback === "default") {
+            return statuses;
+        } else {
+            callback(statuses);
+        }
     },
     getStatus: function(statusId, callback) {
         // the status is retrieved and then the callback function is called with the status
@@ -51,7 +55,7 @@ dataHandler = {
             }
         }
     },
-    getCardsByBoardId: function(boardId, callback) {
+    getCardsByBoardId: function(boardId, callback="default") {
         // the cards are retrieved and then the callback function is called with the cards
         let cards = this._data.cards;
         let cardsByBoardId = [];
@@ -60,17 +64,29 @@ dataHandler = {
                 cardsByBoardId.push(cards[i])
             }
         }
-        callback(cardsByBoardId);
+        if ( callback === "default") {
+            return cardsByBoardId;
+        } else {
+            callback(cardsByBoardId);
+        }
     },
-    getCard: function(cardId, callback) {
+    getCard: function(cardId, callback="default") {
         // the card is retrieved and then the callback function is called with the card
         let cards = this._data.cards;
         let card;
         for (let i = 0; i < cards.length; i++) {
             if (cards[i].id === cardId) {
                 card = cards[i];
-                callback(card);
             }
+        }
+        if( callback === "default"){
+
+            return card
+
+        } else {
+
+            callback(card)
+
         }
     },
     createNewBoard: function(boardTitle) {
@@ -103,6 +119,13 @@ dataHandler = {
     setTheme: function (theme) {
         this._data.theme = theme;
         this._saveData();
-    }
+    },
     // here comes more features
+
+    editCardTitle: function (newTitle, cardID) {
+        let card = this.getCard(cardID);
+        card.title = newTitle;
+        this._saveData();
+
+    },
 };
