@@ -204,10 +204,11 @@ dom = {
     },
 
     handleClickOnEditBoardTitle: function () {
-        let boardID = Number(this.parentElement.getAttribute("id").replace("board",""));
+        let boardElementID = this.parentElement.getAttribute("id");
+        let boardID = Number(boardElementID.replace("board", ""));
         let editTitleInput = document.createElement("input");
         this.parentElement.appendChild(editTitleInput);
-        this.setAttribute("hidden", true);
+        //this.setAttribute("hidden", true);
 
         editTitleInput.setAttribute("placeholder", "New Title");
         editTitleInput.setAttribute("type", "text");
@@ -222,7 +223,15 @@ dom = {
         editSaveButton.addEventListener("click", function() {
             let newBoardTitle = document.getElementById("edit-input-field"+boardID).value;
             dataHandler.editBoardTitle(newBoardTitle, boardID);
-            location.reload();
+            document.getElementById(boardElementID).innerHTML = newBoardTitle;
+
+            let board = document.getElementById(boardElementID);
+            let editButton = document.createElement("i");
+            editButton.classList.add("far", "fa-edit");
+            editButton.setAttribute("id", "edit" + boardID);
+            board.appendChild(editButton);
+            dom.loadBoards();
+
         });
     },
 
@@ -338,21 +347,33 @@ dom = {
     },
 
     handleClickOnEditCardTitle: function () {
-        let cardID = Number(this.getAttribute("id").replace("cardEdit", ""));
+        let cardElementID = this.parentElement.getAttribute("id");
+        let cardID = Number(cardElementID.replace("card", ""));
         let editCardTitleinput = document.createElement("input");
+
         this.parentElement.appendChild(editCardTitleinput);
         editCardTitleinput.setAttribute("placeholder", "New card title");
         editCardTitleinput.setAttribute("type", "text");
         editCardTitleinput.setAttribute("id", "edit-card-input-field" + cardID);
         editCardTitleinput.setAttribute("class", "form-control");
+
         let saveEditButton = document.createElement("button");
         this.parentElement.appendChild(saveEditButton);
         saveEditButton.setAttribute("class", "btn");
         saveEditButton.innerHTML = "Save";
+
         saveEditButton.addEventListener("click", function () {
+
             let newCardTitle = document.getElementById("edit-card-input-field"+cardID).value;
             dataHandler.editCardTitle(newCardTitle, cardID);
-            location.reload();
+            document.getElementById(cardElementID).innerHTML = newCardTitle;
+
+            let Card = document.getElementById(cardElementID);
+            let newiForCardEdit = document.createElement("i");
+                newiForCardEdit.classList.add("fas", "fa-edit", "forcards");
+                newiForCardEdit.setAttribute("id", "cardEdit" + cardID);
+                Card.appendChild(newiForCardEdit);
+                dom.addEventListenerToEditCardTitle();
         });
     }
 };
