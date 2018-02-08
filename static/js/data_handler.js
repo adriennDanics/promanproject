@@ -35,10 +35,14 @@ dataHandler = {
             }
         }
     },
-    getStatuses: function(callback) {
+    getStatuses: function(callback = "default") {
         // the statuses are retrieved and then the callback function is called with the statuses
         let statuses = this._data.statuses;
-        callback(statuses);
+        if ( callback === "default") {
+            return statuses;
+        } else {
+            callback(statuses);
+        }
     },
     getStatus: function(statusId, callback) {
         // the status is retrieved and then the callback function is called with the status
@@ -51,7 +55,7 @@ dataHandler = {
             }
         }
     },
-    getCardsByBoardId: function(boardId, callback) {
+    getCardsByBoardId: function(boardId, callback="default") {
         // the cards are retrieved and then the callback function is called with the cards
         let cards = this._data.cards;
         let cardsByBoardId = [];
@@ -60,7 +64,11 @@ dataHandler = {
                 cardsByBoardId.push(cards[i])
             }
         }
-        callback(cardsByBoardId);
+        if ( callback === "default") {
+            return cardsByBoardId;
+        } else {
+            callback(cardsByBoardId);
+        }
     },
     getCard: function(cardId, callback) {
         // the card is retrieved and then the callback function is called with the card
@@ -88,8 +96,22 @@ dataHandler = {
         this._data.boards.push(newBoard);
         this._saveData();
     },
-    createNewCard: function(cardTitle, boardId, statusId, callback) {
+    createNewCard: function(cardTitle, boardId, statusId) {
         // creates new card, saves it and calls the callback function with its data
+        let existingCardIDs = [];
+        for (let i = 0; i < this._data.cards.length; i++) {
+            existingCardIDs.push(this._data.cards[i].id);
+        }
+        let newCardID = Math.max(...existingCardIDs) + 1;
+        let newCard = {
+            "id": newCardID,
+            "title": cardTitle,
+            "board_id": Number(boardId),
+            "status_id": statusId,
+            "order": ""
+        };
+        this._data.cards.push(newCard);
+        this._saveData();
     },
 
     editBoardTitle: function(newTitle, boardID) {

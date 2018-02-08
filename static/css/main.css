@@ -1,4 +1,134 @@
-.btn-outline-info {
+body{
+    background-image: url("background.jpg");
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.fas {
+    text-align: center;
+    display: inline-block;
+}
+
+.far {
+    text-align: right;
+    display: inline-block;
+}
+
+.card {
+    margin: 40px 40px 10px 10px;
+    box-shadow: 10px 10px 8px #888888;
+    opacity: 0.5;
+}
+
+.card:hover {
+    opacity: 0.8;
+}
+
+.btn-outline-info, #new_board_box {
+    background-color: #d4d5d7;
+    box-shadow: 10px 10px 8px #888888;
+}
+
+h1 {
+    font-size: 60pt;
+    padding: 20px 20px 20px 40px;
+    font-family: 'Pacifico', cursive;
+    text-shadow: 2px 2px palegoldenrod;
+}
+
+#new_board_box.card {
+    position: absolute;
+    top: 10px;
+    right: 20px;
     text-align: right;
     align-self: right;
+}
+
+.footer {
+    height: 50px;
+    transition-duration: 0.300s;
+}
+
+.footer:hover {
+    height: 150pt;
+    right: 20px;
+    position: fixed;
+    text-align: right;
+    align-self: right;
+    display: inline-block;
+}
+
+#our-team {
+    position: fixed;
+    text-align: right;
+    align-self: right;
+    padding: 50px;
+    display: inline-block;
+}
+
+#dark-theme {
+    position: absolute;
+    top: 10px;
+    right: 70px;
+    text-align: right;
+    align-self: right;
+}
+
+.fas.dark {
+    text-align: center;
+    display: inline-block;
+    color: #ffffff;
+}
+
+.far.dark {
+    text-align: right;
+    display: inline-block;
+    color: white;
+}
+
+.card.dark {
+    margin: 40px 40px 10px 10px;
+    box-shadow: 10px 10px 8px #888888;
+    opacity: 0.5;
+    color: white;
+}
+
+.card.dark:hover {
+    opacity: 0.8;
+}
+
+.btn-outline-info, #new_board_box {
+    background-color: #000000;
+    box-shadow: 10px 10px 8px #888888;
+    color: white;
+}
+
+h1.dark {
+    font-size: 60pt;
+    padding: 20px 20px 20px 40px;
+    font-family: 'Pacifico', cursive;
+    text-shadow: 2px 2px #4caf50;
+    color: white;
+}
+
+div.dark {
+    color: white;
+}
+
+div#dark-theme {
+    color: black;
+    position: absolute;
+    top: 10px;
+    right: 70px;
+    text-align: right;
+    align-self: right;
+}
+
+.card.new.dark {
+    color: black;
+}
+
+.fas.fa-plus.card.dark {
+    color: black;
 }

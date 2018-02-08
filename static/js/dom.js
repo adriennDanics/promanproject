@@ -8,6 +8,8 @@ dom = {
         this.addEventListenerToEditBoardTitle();
         this.addEventListenerToBoardDetailButton();
         this.addEventListenerToCloseBoardDetailButton();
+        this.addEventListenerToEditBoardTitle();
+        this.addEventListenerForDarkTheme()
         // retrieves boards and makes showBoards called
     },
     showBoards: function(boards) {
@@ -21,7 +23,7 @@ dom = {
         for(let i=0; i<numberOfBoards; i++){
             let newDivForBoard = document.createElement("div");
             newDivForBoard.innerHTML = boards[i].title;
-            newDivForBoard.classList.add("row", "card", "bg-info", "container");
+            newDivForBoard.classList.add("row", "card", "bg-light", "container");
             newDivForBoard.setAttribute("id", "board"+boards[i].id);
             boardDiv.appendChild(newDivForBoard);
 
@@ -42,10 +44,41 @@ dom = {
             newDivForBoard.appendChild(editButton);
 
             let newDivForBoardDetails = document.createElement("div");
-            newDivForBoardDetails.classList.add("row", "card", "bg-info");
+            newDivForBoardDetails.classList.add("row", "bg-info");
             newDivForBoardDetails.setAttribute("id", "boarddetail" + boards[i].id);
             newDivForBoardDetails.setAttribute("hidden", true);
             newDivForBoard.appendChild(newDivForBoardDetails);
+
+            let newButtonForAddCard = document.createElement("button");
+            newButtonForAddCard.classList.add("fas", "fa-plus", "card");
+            newButtonForAddCard.setAttribute("id", "newboardcard" + boards[i].id);
+            newButtonForAddCard.setAttribute("hidden", true);
+            newDivForBoard.appendChild(newButtonForAddCard);
+
+            let statuses = dataHandler.getStatuses();
+            for (let j = 0; j < statuses.length; j++) {
+                let newStatusColumn = document.createElement("div");
+                newStatusColumn.classList.add("col", "bg-secondary");
+                newDivForBoardDetails.appendChild(newStatusColumn);
+
+                let newDivForCardsContainer = document.createElement("div");
+                newDivForCardsContainer.classList.add();
+                newDivForCardsContainer.setAttribute("id", "board"+boards[i].id+"-"+statuses[j].name);
+                newStatusColumn.appendChild(newDivForCardsContainer);
+
+
+                let cardsByBoardId = dataHandler.getCardsByBoardId(boards[i].id);
+                for (let k = 0; k < cardsByBoardId.length; k++) {
+                    if (cardsByBoardId[k].status_id === statuses[j].id) {
+                        let newDivForCards = document.createElement("div");
+                        newDivForCards.classList.add("card","new");
+                        newDivForCards.setAttribute("id", "card" + cardsByBoardId[k].id);
+                        newDivForCards.innerHTML = cardsByBoardId[k].title;
+                        newDivForCardsContainer.appendChild(newDivForCards);
+                    }
+                }
+            }
+
         }
 
     },
@@ -114,6 +147,29 @@ dom = {
 
                 let boardDetail = document.getElementById("boarddetail" + detailButtonId.replace("detail",""));
                 boardDetail.removeAttribute("hidden");
+
+                let newCardButtonId = document.getElementById("newboardcard" + detailButtonId.replace("detail",""));
+                newCardButtonId.removeAttribute("hidden");
+                newCardButtonId.innerText= "Add New Card At New Status";
+                newCardButtonId.addEventListener("click", function () {
+                    newCardButtonId.setAttribute("hidden", true);
+
+                    let textBoxForNewCard = document.createElement("input");
+                    textBoxForNewCard.classList.add("form-control", "card");
+                    textBoxForNewCard.setAttribute("placeholder", "New Card Title");
+                    newCardButtonId.parentElement.appendChild(textBoxForNewCard);
+
+                    let saveButtonForNewCard = document.createElement("button");
+                    saveButtonForNewCard.classList.add("btn");
+                    saveButtonForNewCard.innerText= "Save";
+
+                    newCardButtonId.parentElement.appendChild(saveButtonForNewCard);
+                    saveButtonForNewCard.addEventListener("click", function (){
+                        let newCardTitleGiven = textBoxForNewCard.value;
+                        dataHandler.createNewCard(newCardTitleGiven, detailButtonId.replace("detail",""), 1);
+                        location.reload()
+                    }, false)
+                }, false)
                 });
         }
     },
@@ -122,21 +178,25 @@ dom = {
         let boardID = Number(this.parentElement.getAttribute("id").replace("board",""));
         let editTitleInput = document.createElement("input");
         this.parentElement.appendChild(editTitleInput);
+        this.setAttribute("hidden", true);
+
         editTitleInput.setAttribute("placeholder", "New Title");
         editTitleInput.setAttribute("type", "text");
         editTitleInput.setAttribute("id", "edit-input-field"+boardID);
         editTitleInput.setAttribute("class", "form-control");
+
         let editSaveButton=document.createElement("button");
         this.parentElement.appendChild(editSaveButton);
         editSaveButton.setAttribute("class", "btn");
         editSaveButton.innerHTML="Save";
+
         editSaveButton.addEventListener("click", function() {
             let newBoardTitle = document.getElementById("edit-input-field"+boardID).value;
             dataHandler.editBoardTitle(newBoardTitle, boardID);
             location.reload();
         }, false);
-    }
-        addEventListenerToCloseBoardDetailButton: function () {
+    },
+    addEventListenerToCloseBoardDetailButton: function () {
         let closeDetailButtons = document.getElementsByClassName("fas fa-angle-up");
         for (let i = 0; i < closeDetailButtons.length; i++) {
             closeDetailButtons[i].addEventListener("click", function () {
@@ -149,7 +209,52 @@ dom = {
                 let boardDetail = document.getElementById("boarddetail" + closeDetailButtonId.replace("closedetail",""));
                 boardDetail.setAttribute("hidden", true);
 
-                });
+                let newCardButtonId = document.getElementById("newboardcard" + closeDetailButtonId.replace("closedetail",""));
+                newCardButtonId.setAttribute("hidden", true);
+            });
         }
     },
+    addEventListenerForDarkTheme: function () {
+        document.getElementById("dark-theme").addEventListener("click", function () {
+            let lettersFas = document.getElementsByClassName("fas");
+            for(let i=0;i<lettersFas.length;i++) {
+                lettersFas[i].classList.add("dark")
+            }
+            let lettersFar = document.getElementsByClassName("far");
+            for(let i=0;i<lettersFar.length;i++) {
+                lettersFar[i].classList.add("dark")
+            }
+            let cardsClass = document.getElementsByClassName("card");
+            for(let i=0;i<cardsClass.length;i++) {
+                cardsClass[i].classList.add("dark")
+            }
+            let newBoardButton = document.getElementsByClassName("btn-outline-info");
+            for(let i=0;i<newBoardButton.length;i++) {
+                newBoardButton[i].classList.add("dark")
+            }
+            let header = document.getElementsByTagName("h1");
+            for(let i=0;i<header.length;i++) {
+                header[i].classList.add("dark")
+            }
+            let cardsForBoards = document.getElementsByClassName("row");
+            for(let i=0;i<cardsForBoards.length;i++) {
+                cardsForBoards[i].classList.remove("bg-light");
+                cardsForBoards[i].classList.add("bg-dark")
+            }
+            let allDivs = document.getElementsByTagName("div");
+            for(let i=0;i<allDivs.length;i++) {
+                allDivs[i].classList.add("dark");
+            }
+            document.body.style.backgroundImage = "url('/static/css/almostblackground.jpg')";
+
+            let darkThemeButton = document.getElementById("dark-theme");
+            darkThemeButton.classList.add("bg-light");
+            darkThemeButton.classList.remove("bg-dark");
+            darkThemeButton.innerText="Light";
+
+            darkThemeButton.addEventListener("click", function () {
+               location.reload();
+            }, false)
+        });
+    }
 };
