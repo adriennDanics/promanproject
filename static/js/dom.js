@@ -57,7 +57,7 @@ dom = {
                 newDivForBoardDetails.appendChild(newStatusColumn);
 
                 let newDivForCardsContainer = document.createElement("div");
-                newDivForCardsContainer.classList.add();
+                newDivForCardsContainer.classList.add("dragula-container");
                 newDivForCardsContainer.setAttribute("id", "board"+boards[i].id+"-"+statuses[j].name);
                 newStatusColumn.appendChild(newDivForCardsContainer);
 
@@ -84,6 +84,12 @@ dom = {
                 }
             }
 
+            let cardContainerListForBoard = [];
+            newDivForBoardDetails.childNodes;
+            for (let l = 0; l < newDivForBoardDetails.childNodes.length; l++) {
+                cardContainerListForBoard.push(newDivForBoardDetails.childNodes[l].firstChild)
+            }
+            drag.addDragNDrop(cardContainerListForBoard)
         }
 
     },

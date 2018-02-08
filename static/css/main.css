@@ -124,3 +124,7 @@ div#dark-theme {
     text-align: right;
     align-self: right;
 }
+
+.dragula-container {
+    height: 100%;
+}
