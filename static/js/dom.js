@@ -160,7 +160,7 @@ dom = {
         let newBoardTitle = document.getElementById("new_board_input_field").value;
         dataHandler.createNewBoard(newBoardTitle);
 
-        location.reload();
+        dom.loadBoards();
     },
 
     addEventListenerToBoardDetailButton: function () {
@@ -295,7 +295,6 @@ dom = {
         }, false)
     },
     handleEventListenerForLightTheme:function () {
-        debugger;
         dataHandler.setTheme("light");
             let lettersFas = document.getElementsByClassName("fas");
             for(let i=0;i<lettersFas.length;i++) {
@@ -338,10 +337,8 @@ dom = {
     },
     themeHandler: function (theme) {
         if(theme === "dark") {
-            debugger;
             dom.handleEventListenerForDarkTheme();
         } else {
-            debugger;
             dom.handleEventListenerForLightTheme()
         }
     },
