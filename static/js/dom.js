@@ -8,6 +8,7 @@ dom = {
         this.addEventListenerToEditBoardTitle();
         this.addEventListenerToBoardDetailButton();
         this.addEventListenerToCloseBoardDetailButton();
+        this.addEventListenerToEditCardTitle();
         // retrieves boards and makes showBoards called
     },
     showBoards: function(boards) {
@@ -58,6 +59,12 @@ dom = {
                 newDivForCardsContainer.setAttribute("id", "board"+boards[i].id+"-"+statuses[j].name);
                 newStatusColumn.appendChild(newDivForCardsContainer);
 
+                let newDivForCardsContainerStatus = document.createElement("div");
+                newDivForCardsContainerStatus.classList.add("status");
+                newDivForCardsContainerStatus.setAttribute("id", "status" + statuses[j].name);
+                newDivForCardsContainerStatus.innerHTML = statuses[j].name;
+                newDivForCardsContainer.appendChild(newDivForCardsContainerStatus);
+
                 let cardsByBoardId = dataHandler.getCardsByBoardId(boards[i].id);
                 for (let k = 0; k < cardsByBoardId.length; k++) {
                     if (cardsByBoardId[k].status_id === statuses[j].id) {
@@ -66,6 +73,11 @@ dom = {
                         newDivForCards.setAttribute("id", "card" + cardsByBoardId[k].id);
                         newDivForCards.innerHTML = cardsByBoardId[k].title;
                         newDivForCardsContainer.appendChild(newDivForCards);
+
+                        let newDivForCardEdit = document.createElement("i");
+                        newDivForCardEdit.classList.add("fas", "fa-edit");
+                        newDivForCardEdit.setAttribute("id", "cardEdit" + cardsByBoardId[k].id);
+                        newDivForCards.appendChild(newDivForCardEdit)
                     }
                 }
             }
@@ -90,11 +102,20 @@ dom = {
     },
 
     addEventListenerToEditBoardTitle: function () {
-        let editableBoard = document.getElementsByClassName("fa-edit");
+        let editableBoard = document.getElementsByClassName("far fa-edit");
         for(let i=0; i<editableBoard.length; i++){
             editableBoard[i].addEventListener("click", this.handleClickOnEditBoardTitle)
         }
     },
+
+    addEventListenerToEditCardTitle: function () {
+        let editableCard = document.getElementsByClassName("fas fa-edit");
+        for( let i = 0; i < editableCard.length; i++){
+            editableCard[i].addEventListener("click", this.handleClickOnEditCardTitle)
+        }
+
+    },
+
 
     handleClickOnNewBoardIcon: function () {
         document.getElementById("new_board_input_field").value = "";
@@ -158,8 +179,9 @@ dom = {
             let newBoardTitle = document.getElementById("edit-input-field"+boardID).value;
             dataHandler.editBoardTitle(newBoardTitle, boardID);
             location.reload();
-        }, false);
+        });
     },
+
     addEventListenerToCloseBoardDetailButton: function () {
         let closeDetailButtons = document.getElementsByClassName("fas fa-angle-up");
         for (let i = 0; i < closeDetailButtons.length; i++) {
@@ -176,4 +198,23 @@ dom = {
                 });
         }
     },
+
+    handleClickOnEditCardTitle: function () {
+        let cardID = Number(this.getAttribute("id").replace("cardEdit", ""));
+        let editCardTitleinput = document.createElement("input");
+        this.parentElement.appendChild(editCardTitleinput);
+        editCardTitleinput.setAttribute("placeholder", "New card title");
+        editCardTitleinput.setAttribute("type", "text");
+        editCardTitleinput.setAttribute("id", "edit-card-input-field" + cardID);
+        editCardTitleinput.setAttribute("class", "form-control");
+        let saveEditButton = document.createElement("button");
+        this.parentElement.appendChild(saveEditButton);
+        saveEditButton.setAttribute("class", "btn");
+        saveEditButton.innerHTML = "Save";
+        saveEditButton.addEventListener("click", function () {
+            let newCardTitle = document.getElementById("edit-card-input-field"+cardID).value;
+            dataHandler.editCardTitle(newCardTitle, cardID);
+            location.reload();
+        });
+    }
 };
