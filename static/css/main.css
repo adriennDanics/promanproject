@@ -5,14 +5,17 @@ body{
     background-attachment: fixed;
 }
 
-.fas {
-    text-align: center;
-    display: inline-block;
+.fa-angle-down, .fa-angle-up, .fa-edit {
+    margin-left: 50%;
+    width: 16px;
 }
 
+.fa-plus card{
+    text-align: center;
+}
 .far {
-    text-align: right;
-    display: inline-block;
+    margin-left: 98%;
+    width: 16px;
 }
 
 .card {
