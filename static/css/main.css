@@ -132,3 +132,7 @@ div#dark-theme {
 .fas.fa-plus.card.dark, .fas.fa-edit.forcards.dark {
     color: black;
 }
+
+.dragula-container {
+    height: 100%;
+}
