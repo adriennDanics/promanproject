@@ -104,8 +104,22 @@ dataHandler = {
         this._data.boards.push(newBoard);
         this._saveData();
     },
-    createNewCard: function(cardTitle, boardId, statusId, callback) {
+    createNewCard: function(cardTitle, boardId, statusId) {
         // creates new card, saves it and calls the callback function with its data
+        let existingCardIDs = [];
+        for (let i = 0; i < this._data.cards.length; i++) {
+            existingCardIDs.push(this._data.cards[i].id);
+        }
+        let newCardID = Math.max(...existingCardIDs) + 1;
+        let newCard = {
+            "id": newCardID,
+            "title": cardTitle,
+            "board_id": Number(boardId),
+            "status_id": statusId,
+            "order": ""
+        };
+        this._data.cards.push(newCard);
+        this._saveData();
     },
 
     editBoardTitle: function(newTitle, boardID) {
