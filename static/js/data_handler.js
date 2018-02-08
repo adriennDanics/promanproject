@@ -6,6 +6,7 @@
 dataHandler = {
     keyInLocalStorage: 'proman-data', // the string that you use as a key in localStorage to save your application data
     _data: {}, // it contains the boards and their cards and statuses. It is not called from outside.
+    _darkLight:{},
     _loadData: function() {
         // it is not called from outside
         // loads data from local storage, parses it and put into this._data property
@@ -18,6 +19,7 @@ dataHandler = {
     },
     init: function() {
         this._loadData();
+        this.getLastClicked();
     },
     getBoards: function(callback) {
         // the boards are retrieved and then the callback function is called with the boards
@@ -96,6 +98,13 @@ dataHandler = {
         let board = this.getBoard(boardID);
         board.title=newTitle;
         this._saveData();
+    },
+    getLastClicked: function () {
+        this._darkLight = JSON.parse(localStorage.getItem("lastClicked"));
+    },
+    passOnLastClicked: function (callback) {
+        let lastClickedTheme = this._darkLight;
+        callback(lastClickedTheme);
     }
     // here comes more features
 };
