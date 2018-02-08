@@ -1,5 +1,5 @@
 drag = {
     addDragNDrop: function (elementList) {
-        dragula(elementList);
+        return dragula(elementList);
     }
 };

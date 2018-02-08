@@ -95,9 +95,9 @@ dom = {
             for (let l = 0; l < newDivForBoardDetails.childNodes.length; l++) {
                 cardContainerListForBoard.push(newDivForBoardDetails.childNodes[l].firstChild)
             }
-            drag.addDragNDrop(cardContainerListForBoard)
+            let drake = drag.addDragNDrop(cardContainerListForBoard);
+            dom.handleCardDrop(drake);
         }
-
     },
     loadCards: function(boardId) {
         // retrieves cards and makes showCards called
@@ -354,5 +354,16 @@ dom = {
             dataHandler.editCardTitle(newCardTitle, cardID);
             location.reload();
         });
-    }
+    },
+
+    handleCardDrop: function (drake) {
+        drake.on('drop', function(el, target, source, sibling) {
+            let cardID = Number(el.id.replace("card", ""));
+            let card = dataHandler.getCard(cardID);
+            let statusName = target.firstChild.id.replace("status","");
+            let status = dataHandler.getStatusIDByName(statusName);
+            card.status_id = status.id;
+            dataHandler._saveData();
+        });
+    },
 };

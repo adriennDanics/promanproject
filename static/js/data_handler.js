@@ -44,17 +44,22 @@ dataHandler = {
             callback(statuses);
         }
     },
-    getStatus: function(statusId, callback) {
+    getStatusIDByName: function(statusName, callback="default") {
         // the status is retrieved and then the callback function is called with the status
         let statuses = this._data.statuses;
         let status;
         for (let i = 0; i < statuses.length; i++) {
-            if (statuses[i].id === statusId) {
+            if (statuses[i].name === statusName) {
                 status = statuses[i];
-                callback(status);
             }
         }
+        if( callback === "default"){
+            return status
+        } else {
+            callback(status)
+        }
     },
+
     getCardsByBoardId: function(boardId, callback="default") {
         // the cards are retrieved and then the callback function is called with the cards
         let cards = this._data.cards;
