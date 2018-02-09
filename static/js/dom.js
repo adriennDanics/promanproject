@@ -13,6 +13,7 @@ dom = {
         this.addEventListenerToEditCardTitle();
         this.addEventListenerToEditBoardTitle();
         this.addEventListenerForDarkTheme();
+        this.addEventListenerForFunTheme();
         // retrieves boards and makes showBoards called
     },
     showBoards: function(boards) {
@@ -132,10 +133,14 @@ dom = {
 
     },
 
-
     addEventListenerForDarkTheme: function (){
-        document.getElementById("dark-theme").addEventListener("click", this.handleEventListenerForDarkTheme, false)
+        document.getElementById("dark-theme").addEventListener("click", dom.handleEventListenerForDarkTheme, false)
     },
+
+    addEventListenerForFunTheme: function () {
+        document.getElementById("fun-theme").addEventListener("click", dom.confirmHandlingForFunTheme, false)
+    },
+
     handleClickOnNewBoardIcon: function () {
         document.getElementById("new_board_input_field").value = "";
 
@@ -201,7 +206,7 @@ dom = {
                         location.reload()
                     }, false)
                 }, false)
-                });
+            });
         }
     },
 
@@ -298,50 +303,55 @@ dom = {
     },
     handleEventListenerForLightTheme:function () {
         dataHandler.setTheme("light");
-            let lettersFas = document.getElementsByClassName("fas");
-            for(let i=0;i<lettersFas.length;i++) {
-                lettersFas[i].classList.remove("dark")
-            }
-            let lettersFar = document.getElementsByClassName("far");
-            for(let i=0;i<lettersFar.length;i++) {
-                lettersFar[i].classList.remove("dark")
-            }
-            let cardsClass = document.getElementsByClassName("card");
-            for(let i=0;i<cardsClass.length;i++) {
-                cardsClass[i].classList.remove("dark")
-            }
-            let newBoardButton = document.getElementsByClassName("btn-outline-info");
-            for(let i=0;i<newBoardButton.length;i++) {
-                newBoardButton[i].classList.remove("dark")
-            }
-            let header = document.getElementsByTagName("h1");
-            for(let i=0;i<header.length;i++) {
-                header[i].classList.remove("dark")
-            }
-            let cardsForBoards = document.getElementsByClassName("row");
-            for(let i=0;i<cardsForBoards.length;i++) {
-                cardsForBoards[i].classList.add("bg-light");
-                cardsForBoards[i].classList.remove("bg-dark")
-            }
-            let allDivs = document.getElementsByTagName("div");
-            for(let i=0;i<allDivs.length;i++) {
-                allDivs[i].classList.remove("dark");
-            }
-            document.body.style.backgroundImage = "url('/static/css/background.jpg')";
-            let darkThemeButton = document.getElementById("dark-theme");
-            darkThemeButton.classList.remove("bg-light");
-            darkThemeButton.classList.add("bg-dark");
-            darkThemeButton.innerText="Dark";
-            darkThemeButton.addEventListener("click", function () {
-                dataHandler.setTheme("dark");
-                dom.handleEventListenerForDarkTheme();
-            }, false)
+        let oldStyle = document.getElementById("stylea");
+        oldStyle.removeAttribute("href");
+        oldStyle.setAttribute("href", "static/css/main.css");
+        let lettersFas = document.getElementsByClassName("fas");
+        for(let i=0;i<lettersFas.length;i++) {
+            lettersFas[i].classList.remove("dark")
+        }
+        let lettersFar = document.getElementsByClassName("far");
+        for(let i=0;i<lettersFar.length;i++) {
+            lettersFar[i].classList.remove("dark")
+        }
+        let cardsClass = document.getElementsByClassName("card");
+        for(let i=0;i<cardsClass.length;i++) {
+            cardsClass[i].classList.remove("dark")
+        }
+        let newBoardButton = document.getElementsByClassName("btn-outline-info");
+        for(let i=0;i<newBoardButton.length;i++) {
+            newBoardButton[i].classList.remove("dark")
+        }
+        let header = document.getElementsByTagName("h1");
+        for(let i=0;i<header.length;i++) {
+            header[i].classList.remove("dark")
+        }
+        let cardsForBoards = document.getElementsByClassName("row");
+        for(let i=0;i<cardsForBoards.length;i++) {
+            cardsForBoards[i].classList.add("bg-light");
+            cardsForBoards[i].classList.remove("bg-dark")
+        }
+        let allDivs = document.getElementsByTagName("div");
+        for(let i=0;i<allDivs.length;i++) {
+            allDivs[i].classList.remove("dark");
+        }
+        document.body.style.backgroundImage = "url('/static/css/background.jpg')";
+        let darkThemeButton = document.getElementById("dark-theme");
+        darkThemeButton.classList.remove("bg-light");
+        darkThemeButton.classList.add("bg-dark");
+        darkThemeButton.innerText="Dark";
+        darkThemeButton.addEventListener("click", function () {
+            dataHandler.setTheme("dark");
+            dom.handleEventListenerForDarkTheme();
+        }, false)
     },
     themeHandler: function (theme) {
         if(theme === "dark") {
             dom.handleEventListenerForDarkTheme();
-        } else {
+        } else if(theme === "light") {
             dom.handleEventListenerForLightTheme()
+        } else if(theme === "fun"){
+            dom.handleEventListenerForFunTheme()
         }
     },
 
@@ -439,4 +449,22 @@ dom = {
             dataHandler._saveData();
         });
     },
+
+    confirmHandlingForFunTheme: function () {
+        let confirmation = confirm("The page needs to reload for new style!");
+        if(confirmation === true){
+            dom.handleEventListenerForFunTheme();
+            location.reload();
+        } else {
+            dom.handleEventListenerForDarkTheme();
+        }
+
+    },
+    handleEventListenerForFunTheme: function () {
+        dataHandler.setTheme("fun");
+        let oldStyle = document.getElementById("stylea");
+        oldStyle.removeAttribute("href");
+        oldStyle.setAttribute("href", "static/css/extratheme.css");
+
+    }
 };
