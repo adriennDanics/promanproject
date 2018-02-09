@@ -1,5 +1,5 @@
 body{
-    background-image: url("background.jpg");
+    background-image: url("helabackground.jpg");
     background-size: 100%;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -10,24 +10,34 @@ body{
     width: 16px;
 }
 
-.fa-plus card{
+.fa-plus.card{
     text-align: center;
+    width: 20%;
+    background-color: #051f10;
+    color: palegoldenrod;
 }
 .far {
     margin-left: 98%;
     width: 16px;
 }
 
-.card {
+.card.bg-light, .card.bg-info {
+    background-color: #051f10 !important;
     margin: 40px 40px 10px 10px;
-    box-shadow: 10px 10px 8px #888888;
+    box-shadow: 10px 10px 8px #4caf50;
     opacity: 0.5;
+    width: 50%;
+    left: 500px;
+    color: white;
 }
 
 .card:hover {
     opacity: 0.8;
 }
 
+.btn{
+    background-color: #880c19;
+}
 .btn-outline-info, #new_board_box {
     background-color: #d4d5d7;
     box-shadow: 10px 10px 8px #888888;
@@ -35,40 +45,29 @@ body{
 
 h1 {
     font-size: 60pt;
-    padding: 20px 20px 20px 40px;
-    font-family: 'Pacifico', cursive;
-    text-shadow: 2px 2px palegoldenrod;
+    padding: 20px 20px 20px 650px;
+    font-family:'IM Fell English', serif;
+    text-shadow: 2px 2px #051f10;
+    color: #880c19;
 }
 
 #new_board_box.card {
     position: absolute;
-    top: 10px;
-    right: 20px;
+    top: 50px;
+    right: 60px;
     text-align: right;
     align-self: right;
+    width: 80px;
 }
 
 .footer {
-    height: 1px;
-    position: fixed;
-    bottom:10px;
-    right: 20px;
+    height: 50px;
     transition-duration: 0.300s;
 }
 
 .footer:hover {
-    height: 200px;
-    right: 20px;
-    position: fixed;
-    text-align: right;
-    align-self: right;
-    display: inline-block;
-}
-
-img.footer {
-    height: 50px;
-    bottom:10px;
-    left: 20px;
+    height: 150pt;
+    color: white;
 }
 
 #our-team {
@@ -86,7 +85,6 @@ img.footer {
     text-align: right;
     align-self: right;
 }
-
 .fas.dark {
     text-align: center;
     display: inline-block;
@@ -104,6 +102,7 @@ img.footer {
     box-shadow: 10px 10px 8px #888888;
     opacity: 0.5;
     color: white;
+    position: fixed;
 }
 
 .card.dark:hover {
@@ -137,12 +136,14 @@ div#dark-theme {
     align-self: right;
 }
 
-.card.new.dark {
+.card.new, card.new.dark {
     color: black;
+    background-color: #888888;
 }
 
 .fas.fa-plus.card.dark, .fas.fa-edit.forcards.dark {
-    color: black;
+    color: white;
+    background-color: #051f10;
 }
 
 .dragula-container {
@@ -152,8 +153,8 @@ div#dark-theme {
 #fun-theme {
     position: absolute;
     top: 200px;
-    right: 50px;
+    right: 100px;
     height: 50px;
     width: 50px;
-    opacity: 0.01;
+    opacity: 0.2;
 }
