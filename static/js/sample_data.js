@@ -40,14 +40,14 @@ sampleData = {
             "title": "task1",
             "board_id": 1,
             "status_id": 1,
-            "order": 3
+            "order": 1
         },
         {
             "id": 2,
             "title": "task2",
             "board_id": 1,
             "status_id": 2,
-            "order": 2
+            "order": 1
         },
         {
             "id": 3,
@@ -61,14 +61,14 @@ sampleData = {
             "title": "task4",
             "board_id": 2,
             "status_id": 1,
-            "order": 3
+            "order": 1
         },
         {
             "id": 5,
             "title": "task5",
             "board_id": 2,
             "status_id": 2,
-            "order": 2
+            "order": 1
         },
         {
             "id": 6,

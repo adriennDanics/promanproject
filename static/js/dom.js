@@ -2,7 +2,8 @@
 dom = {
     loadBoards: function() {
         dataHandler.init();
-        dataHandler.sortCardsInBoards();
+        dataHandler.sortCardsInBoardsByOrder();
+        dataHandler.sortCardsInBoardsByStatus();
         dataHandler.getBoards(this.showBoards);
         dataHandler.getTheme(this.themeHandler);
         this.addEventListenerToNewBoardIcon();
@@ -381,24 +382,60 @@ dom = {
             let card = dataHandler.getCard(cardId);
             let statusName = target.firstChild.id.replace("status","");
             let status = dataHandler.getStatusIDByName(statusName);
-            card.status_id = status.id;
 
-            dataHandler._saveData();
+            let boardId = card.board_id;
+            let cardsForThisBoard = dataHandler.getCardsByBoardId(boardId);
+            let orderForThisBoardAndDroppedToStatus = [];
+            for (let i = 0; i < cardsForThisBoard.length; i++) {
+                if (cardsForThisBoard[i].status_id === status.id) {
+                    orderForThisBoardAndDroppedToStatus.push(cardsForThisBoard[i].order);
+                }
+            }
+
+            let maxOrderForThisBoardAndStatus = Math.max(...orderForThisBoardAndDroppedToStatus);
 
             if (sibling === null) {
-                let boardId = card.board_id;
-                let cardsForThisBoard = dataHandler.getCardsByBoardId(Number(boardId));
-                let orderForThisBoard = [];
-                for (let i = 0; i < cardsForThisBoard.length; i++) {
-                    orderForThisBoard.push(cardsForThisBoard[i].order);
+
+                if (orderForThisBoardAndDroppedToStatus.length > 0) {
+                    card.order = maxOrderForThisBoardAndStatus + 1;
+                } else {
+                    card.order = 1;
                 }
-                card.order = Math.max(...orderForThisBoard) + 1;
             } else {
                 let droppedBeforeCardId = Number(sibling.id.replace("card", ""));
                 let droppedBeforeCard = dataHandler.getCard(droppedBeforeCardId);
-                card.order = droppedBeforeCard.id - 1;
+                if (droppedBeforeCard.order === 1) {
+                    for (let i = 0; i < cardsForThisBoard.length; i++) {
+                        if (cardsForThisBoard[i].status_id === status.id && cardsForThisBoard[i].id !== card.id) {
+                            cardsForThisBoard[i].order++;
+                        }
+                    }
+                    card.order = 1;
+                } else {
+                    card.order = droppedBeforeCard.order;
+                    for (let i = 0; i < cardsForThisBoard.length; i++) {
+                        if (cardsForThisBoard[i].status_id === status.id && cardsForThisBoard[i].id !== card.id) {
+                            if (cardsForThisBoard[i].order >= card.order) {
+                                cardsForThisBoard[i].order++;
+                            }
+
+                        }
+                    }
+                }
             }
 
+            let draggedFrom = source;
+            let draggedFromCards = draggedFrom.getElementsByClassName("card new");
+
+            if (draggedFromCards.length > 0) {
+                for (let i = 0; i < draggedFromCards.length; i++) {
+                    cardId = Number(draggedFromCards[i].id.replace("card", ""));
+                    let oldCard = dataHandler.getCard(cardId);
+                    oldCard.order = i + 1;
+                }
+            }
+
+            card.status_id = status.id;
             dataHandler._saveData();
         });
     },

@@ -119,8 +119,11 @@ dataHandler = {
         let cardsForThisBoard = this.getCardsByBoardId(Number(boardId));
         let orderForThisBoard = [];
         for (let i = 0; i < cardsForThisBoard.length; i++) {
-            orderForThisBoard.push(cardsForThisBoard[i].order);
+            if (cardsForThisBoard[i].status_id === 1) {
+                orderForThisBoard.push(cardsForThisBoard[i].order);
+            }
         }
+
         let newCardOrder = Math.max(...orderForThisBoard) + 1;
         let newCard = {
             "id": newCardID,
@@ -154,10 +157,17 @@ dataHandler = {
 
     },
 
-    sortCardsInBoards: function () {
+    sortCardsInBoardsByOrder: function () {
         let allCardsInAllBoards = dataHandler._data.cards;
         allCardsInAllBoards.sort(function (a, b) {
             return a.order - b.order
+        });
+    },
+
+    sortCardsInBoardsByStatus: function () {
+        let allCardsInAllBoards = dataHandler._data.cards;
+        allCardsInAllBoards.sort(function (a, b) {
+            return a.status_id - b.status_id
         });
     },
 };
