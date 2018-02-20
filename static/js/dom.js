@@ -24,7 +24,12 @@ dom = {
         let boardDiv = document.getElementById("boards");
         boardDiv.innerHTML = "";
 
-        for(let i=0; i<numberOfBoards; i++){
+        for (let board of boards) {
+
+            let htmlForBoard = htmlStrings.valami(board);
+            boardDiv.insertAdjacentHTML("beforeend", htmlForBoard);
+
+        /*for(let i=0; i<numberOfBoards; i++){
             let newDivForBoard = document.createElement("div");
             newDivForBoard.innerHTML = boards[i].title;
             newDivForBoard.classList.add("row", "card", "bg-light", "container");
@@ -99,7 +104,7 @@ dom = {
                 cardContainerListForBoard.push(newDivForBoardDetails.childNodes[l].firstChild)
             }
             let drake = drag.addDragNDrop(cardContainerListForBoard);
-            dom.handleCardDrop(drake);
+            dom.handleCardDrop(drake);*/
         }
     },
     loadCards: function(boardId) {
