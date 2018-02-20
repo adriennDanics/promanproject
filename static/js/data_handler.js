@@ -27,7 +27,7 @@ dataHandler = {
         // key parameter: board/card/etc.
         // age parameter: update old or set new
         if(dataToSave === "theme"){
-           localStorage.setItem("theme", JSON.stringify(dataHandler.theme));
+           localStorage.setItem("theme", JSON.stringify(dataHandler._theme));
         } else {
             let dataToPost = {"table": whatToUpdateOrAdd, "data": dataToSave};
             console.log(dataToPost);
@@ -169,11 +169,11 @@ dataHandler = {
         dataHandler._saveData("boards", board);
     },
     getTheme: function (callback) {
-        callback(dataHandler._data.theme);
+        callback(dataHandler._theme);
     },
     setTheme: function (theme) {
-        dataHandler._data.theme = theme;
-        dataHandler._saveData("theme");
+        dataHandler._theme = theme;
+        dataHandler._saveData("theme", "theme");
     },
     // here comes more features
 
