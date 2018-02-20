@@ -1,10 +1,12 @@
 htmlStrings = {
     initBoard: function (board) {
         return `<div class="row card bg-light container" id="board${board.id}">
-                    <span>${board.title}</span>
-                    <button type="button">
+                    <span class="boards" id="board${board.id}">${board.title}</span>
+                    <button type="button" class="titleEditButton" id="edit${board.id}">
                         <i class="far fa-edit" id="edit${board.id}"></i>
-                    </button>         
+                    </button> 
+                    <input class="form-control" hidden="true" placeholder="${board.title}" type="text" id="edit-input-field${board.id}">
+                    <button hidden="true" class="btn" id="edit-input-button${board.id}">Save</button>        
                 </div>`
     },
     initDetails: function (board) {

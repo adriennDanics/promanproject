@@ -4,7 +4,7 @@ dom = {
         dataHandler.init();
         dataHandler.sortCardsInBoardsByOrder();
         dataHandler.sortCardsInBoardsByStatus();
-        dataHandler.getBoards(this.showBoards);
+        dataHandler.getBoards(dom.showBoards);
         dataHandler.getTheme(themes.themeHandler);
         this.addEventListenerToNewBoardIcon();
         this.addEventListenerToSaveNewBoardButton();
@@ -152,7 +152,7 @@ dom = {
     },
 
     addEventListenerToEditBoardTitle: function () {
-        let editableBoard = document.getElementsByClassName("far fa-edit");
+        let editableBoard = document.getElementsByClassName("titleEditButton");
         for(let i=0; i<editableBoard.length; i++){
             editableBoard[i].addEventListener("click", this.handleClickOnEditBoardTitle)
         }
@@ -196,17 +196,17 @@ dom = {
     },
 
     addEventListenerToBoardDetailButton: function () {
-        let detailForBoards = document.getElementsByClassName("row card bg-light container");
+        let detailForBoards = document.getElementsByClassName("boards");
         for (let detailForBoard of detailForBoards) {
             detailForBoard.addEventListener("click", function () {
 
                 let detailButtonId = detailForBoard.id;
-
-                /*let closeDetailButton = document.getElementById("closedetail" + detailButtonId.replace("board",""));
-                closeDetailButton.removeAttribute("hidden");
-                    */
                 let boardDetail = document.getElementById("boarddetail" + detailButtonId.replace("board",""));
-                boardDetail.removeAttribute("hidden");
+                if(boardDetail.hasAttribute("hidden")) {
+                    boardDetail.removeAttribute("hidden");
+                } else {
+                    boardDetail.setAttribute("hidden", true)
+                }
 
                 let newCardButtonId = document.getElementById("newboardcard" + detailButtonId.replace("board",""));
                 newCardButtonId.removeAttribute("hidden");
@@ -236,30 +236,24 @@ dom = {
     handleClickOnEditBoardTitle: function () {
         let boardElementID = this.parentElement.getAttribute("id");
         let boardID = Number(boardElementID.replace("board", ""));
-        let editTitleInput = document.createElement("input");
-        this.parentElement.appendChild(editTitleInput);
-        //this.setAttribute("hidden", true);
 
-        editTitleInput.setAttribute("placeholder", "New Title");
-        editTitleInput.setAttribute("type", "text");
-        editTitleInput.setAttribute("id", "edit-input-field"+boardID);
-        editTitleInput.setAttribute("class", "form-control");
+        let inputField = document.getElementById("edit-input-field" + boardID);
+        let saveButton = document.getElementById("edit-input-button" + boardID);
 
-        let editSaveButton=document.createElement("button");
-        this.parentElement.appendChild(editSaveButton);
-        editSaveButton.setAttribute("class", "btn");
-        editSaveButton.innerHTML="Save";
+        if(inputField.hasAttribute("hidden") && saveButton.hasAttribute("hidden")) {
+            inputField.removeAttribute("hidden");
+            saveButton.removeAttribute("hidden");
+        } else {
+            inputField.setAttribute("hidden", true);
+            saveButton.setAttribute("hidden", true);
+        }
 
-        editSaveButton.addEventListener("click", function() {
+        saveButton.addEventListener("click", function() {
             let newBoardTitle = document.getElementById("edit-input-field"+boardID).value;
             dataHandler.editBoardTitle(newBoardTitle, boardID);
             document.getElementById(boardElementID).innerHTML = newBoardTitle;
 
-            let board = document.getElementById(boardElementID);
-            let editButton = document.createElement("i");
-            editButton.classList.add("far", "fa-edit");
-            editButton.setAttribute("id", "edit" + boardID);
-            board.appendChild(editButton);
+            
             dom.loadBoards();
 
         });
