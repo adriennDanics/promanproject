@@ -1,17 +1,16 @@
 // It uses data_handler.js to visualize elements
 dom = {
     loadBoards: function() {
-        dataHandler.init();
         dataHandler.sortCardsInBoardsByOrder();
         dataHandler.sortCardsInBoardsByStatus();
-        dataHandler.getBoards(this.showBoards);
+        dataHandler.getBoards(dom.showBoards);
         dataHandler.getTheme(themes.themeHandler);
-        this.addEventListenerToNewBoardIcon();
-        this.addEventListenerToSaveNewBoardButton();
-        this.addEventListenerToBoardDetailButton();
-        this.addEventListenerToCloseBoardDetailButton();
-        this.addEventListenerToEditCardTitle();
-        this.addEventListenerToEditBoardTitle();
+        dom.addEventListenerToNewBoardIcon();
+        dom.addEventListenerToSaveNewBoardButton();
+        dom.addEventListenerToBoardDetailButton();
+        dom.addEventListenerToCloseBoardDetailButton();
+        dom.addEventListenerToEditCardTitle();
+        dom.addEventListenerToEditBoardTitle();
         themes.addEventListenerForDarkTheme();
         themes.addEventListenerForFunTheme();
         // retrieves boards and makes showBoards called

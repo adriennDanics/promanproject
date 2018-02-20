@@ -6,16 +6,16 @@
 dataHandler = {
     keyInLocalStorage: 'proman-data', // the string that you use as a key in localStorage to save your application data
     _data: {}, // it contains the boards and their cards and statuses. It is not called from outside.
-    _loadData: function() {
+    _loadData: function(callback) {
         // it is not called from outside
         // loads data from local storage, parses it and put into this._data property
         $.ajax({
             dataType: "json",
             url: "http://127.0.0.1:5000/data" ,
             method: 'GET',
-            async: false,
             success: function(response) {
                 dataHandler._data = response;
+                callback();
             }
         });
     },

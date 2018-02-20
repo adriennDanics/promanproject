@@ -10,7 +10,7 @@ def boards():
     return render_template('boards.html')
 
 
-@app.route('/data')
+@app.route('/data', methods=['GET', 'POST'])
 def data_dump():
     boards_data = data_handler.get_all_board_data()
     cards_data = data_handler.get_all_card_data()
