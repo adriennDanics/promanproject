@@ -9,7 +9,15 @@ dataHandler = {
     _loadData: function() {
         // it is not called from outside
         // loads data from local storage, parses it and put into this._data property
-        this._data = JSON.parse(localStorage.getItem(this.keyInLocalStorage));
+        $.ajax({
+            dataType: "json",
+            url: "http://127.0.0.1:5000/data" ,
+            method: 'GET',
+            async: false,
+            success: function(response) {
+                dataHandler._data = response;
+            }
+        });
     },
     _saveData: function() {
         // it is not called from outside
@@ -158,7 +166,7 @@ dataHandler = {
     },
 
     sortCardsInBoardsByOrder: function () {
-        let allCardsInAllBoards = dataHandler._data.cards;
+        let allCardsInAllBoards = this._data.cards;
         allCardsInAllBoards.sort(function (a, b) {
             return a.order - b.order
         });
