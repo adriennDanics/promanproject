@@ -53,6 +53,18 @@ dom = {
                 }
             }
 
+            let cardContainerListForBoard = [];
+            let dragulaContainersForBoard = document.getElementsByClassName('dragula-container');
+            for (let container of dragulaContainersForBoard) {
+                if (Number(container.dataset.board) === board.id){
+                    cardContainerListForBoard.push(container)
+                }
+            }
+            let drake = drag.addDragNDrop(cardContainerListForBoard);
+            dom.handleCardDrop(drake);
+        }
+    },
+
         /*for(let i=0; i<numberOfBoards; i++){
             let newDivForBoard = document.createElement("div");
             newDivForBoard.innerHTML = boards[i].title;
@@ -120,17 +132,9 @@ dom = {
                         newDivForCards.appendChild(newDivForCardEdit)
                     }
                 }
-            }
+            }*/
 
-            let cardContainerListForBoard = [];
-            newDivForBoardDetails.childNodes;
-            for (let l = 0; l < newDivForBoardDetails.childNodes.length; l++) {
-                cardContainerListForBoard.push(newDivForBoardDetails.childNodes[l].firstChild)
-            }
-            let drake = drag.addDragNDrop(cardContainerListForBoard);
-            dom.handleCardDrop(drake);*/
-        }
-    },
+
     loadCards: function(boardId) {
         // retrieves cards and makes showCards called
     },
@@ -315,7 +319,7 @@ dom = {
         drake.on('drop', function(el, target, source, sibling) {
             let cardId = Number(el.id.replace("card", ""));
             let card = dataHandler.getCard(cardId);
-            let statusName = target.firstChild.id.replace("status","");
+            let statusName = target.dataset.status
             let status = dataHandler.getStatusIDByName(statusName);
 
             let boardId = card.board_id;
