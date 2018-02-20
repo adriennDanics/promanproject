@@ -21,20 +21,44 @@ dom = {
         // it adds necessary event listeners also
         let numberOfBoards = boards.length;
 
-        let boardDiv = document.getElementById("boards");
-        boardDiv.innerHTML = "";
+        let boardsDiv = document.getElementById("boards");
+        boardsDiv.innerHTML = "";
 
         for (let board of boards) {
 
-            let htmlForBoard = htmlStrings.valami(board);
-            boardDiv.insertAdjacentHTML("beforeend", htmlForBoard);
+            let htmlForBoard = htmlStrings.initBoard(board);
+            boardsDiv.insertAdjacentHTML("beforeend", htmlForBoard);
+
+            let boardDiv = document.getElementById("board" + board.id);
+            let htmlForDetail = htmlStrings.initDetails(board);
+            boardDiv.insertAdjacentHTML("beforeend", htmlForDetail);
+
+            let statuses = dataHandler.getStatuses();
+            for(let status of statuses){
+                let boardDivDetail = document.getElementById("boarddetail" + board.id);
+                let htmlForStatus = htmlStrings.initStatusCard(status, board);
+                boardDivDetail.insertAdjacentHTML("beforeend", htmlForStatus);
+                if(status.name === "New") {
+                    let newStatusDiv = document.getElementById("statusNew" + board.id + "span");
+                    newStatusDiv.insertAdjacentHTML("beforeend", htmlStrings.initNewCardButton(board));
+                }
+
+                let cards = dataHandler.getCardsByBoardId(board.id);
+                let boardDivDetailContainer = document.getElementById("board" + board.id + "-" + status.name);
+                for(let card of cards){
+                    if(card.status_id === status.id){
+                        let htmlForCard = htmlStrings.initCard(card);
+                        boardDivDetailContainer.insertAdjacentHTML("beforeend", htmlForCard);
+                    }
+                }
+            }
 
         /*for(let i=0; i<numberOfBoards; i++){
             let newDivForBoard = document.createElement("div");
             newDivForBoard.innerHTML = boards[i].title;
             newDivForBoard.classList.add("row", "card", "bg-light", "container");
             newDivForBoard.setAttribute("id", "board"+boards[i].id);
-            boardDiv.appendChild(newDivForBoard);
+            boardsDiv.appendChild(newDivForBoard);
 
             let detailButton = document.createElement("i");
             detailButton.classList.add("fas", "fa-angle-down");
@@ -168,22 +192,20 @@ dom = {
     },
 
     addEventListenerToBoardDetailButton: function () {
-        let detailButtons = document.getElementsByClassName("fas fa-angle-down");
-        for (let i = 0; i < detailButtons.length; i++) {
-            detailButtons[i].addEventListener("click", function () {
+        let detailForBoards = document.getElementsByClassName("row card bg-light container");
+        for (let detailForBoard of detailForBoards) {
+            detailForBoard.addEventListener("click", function () {
 
-                let detailButtonId = detailButtons[i].id;
-                document.getElementById(detailButtonId).setAttribute("hidden", true);
+                let detailButtonId = detailForBoard.id;
 
-                let closeDetailButton = document.getElementById("closedetail" + detailButtonId.replace("detail",""));
+                /*let closeDetailButton = document.getElementById("closedetail" + detailButtonId.replace("board",""));
                 closeDetailButton.removeAttribute("hidden");
-
-                let boardDetail = document.getElementById("boarddetail" + detailButtonId.replace("detail",""));
+                    */
+                let boardDetail = document.getElementById("boarddetail" + detailButtonId.replace("board",""));
                 boardDetail.removeAttribute("hidden");
 
-                let newCardButtonId = document.getElementById("newboardcard" + detailButtonId.replace("detail",""));
+                let newCardButtonId = document.getElementById("newboardcard" + detailButtonId.replace("board",""));
                 newCardButtonId.removeAttribute("hidden");
-                newCardButtonId.innerText= "Add New Card At New Status";
                 newCardButtonId.addEventListener("click", function () {
                     newCardButtonId.setAttribute("hidden", true);
 
@@ -199,7 +221,7 @@ dom = {
                     newCardButtonId.parentElement.appendChild(saveButtonForNewCard);
                     saveButtonForNewCard.addEventListener("click", function (){
                         let newCardTitleGiven = textBoxForNewCard.value;
-                        dataHandler.createNewCard(newCardTitleGiven, detailButtonId.replace("detail",""), 1);
+                        dataHandler.createNewCard(newCardTitleGiven, detailButtonId.replace("board",""), 1);
                         location.reload()
                     }, false)
                 }, false)
