@@ -70,5 +70,5 @@ def insert_into_table_cards(cursor, data):
 
 @db_connection.connection_handler
 def insert_into_table_boards(cursor, data):
-    cursor.execute('''INSERT INTO boards(title, is_active, user_id) 
-                      VALUES (%(title)s, %(is_active)s, %(user_id)s);''', data)
+    cursor.execute('''INSERT INTO boards(title, user_id) 
+                      VALUES (%(title)s, %(user_id)s);''', data)

@@ -129,7 +129,6 @@ dataHandler = {
         let newBoard = {
             "id": newBoardID,
             "title": boardTitle,
-            "is_active": true,
             "user_id": 1
         };
         dataHandler._data.boards.push(newBoard);
