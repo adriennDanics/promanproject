@@ -22,7 +22,7 @@ CREATE SEQUENCE board_id_seq
 CREATE TABLE boards (
 	id INT NOT NULL PRIMARY KEY DEFAULT nextval('board_id_seq'), 
 	title VARCHAR(255), 
-  is_active VARCHAR(255) NOT NULL DEFAULT 'true',
+  	is_active BIT(1) NOT NULL DEFAULT 1::bit,
 	user_id INT NOT NULL
 );
 
@@ -34,7 +34,7 @@ CREATE SEQUENCE status_id_seq
     CACHE 1;
 
 CREATE TABLE statuses (
-	id INT NOT NULL PRIMARY KEY DEFAULT nextval('status_id_seq'), 
+	id INT NOT NULL PRIMARY KEY DEFAULT nextval('status_id_seq'),
 	name VARCHAR(255) NOT NULL
 );
 
@@ -47,11 +47,12 @@ CREATE SEQUENCE card_id_seq
     CACHE 1;
 
 CREATE TABLE cards (
-	id INT NOT NULL PRIMARY KEY DEFAULT nextval('card_id_seq'), 
-	title VARCHAR(255), 
-  board_id INT NOT NULL,
+	id INT NOT NULL PRIMARY KEY DEFAULT nextval('card_id_seq'),
+	title VARCHAR(255),
+  	board_id INT NOT NULL,
 	status_id INT NOT NULL,
-	order_num INT NOT NULL
+	order_num INT NOT NULL,
+	is_active BIT(1) NOT NULL DEFAULT 1::bit
 );
 
 ALTER TABLE ONLY cards
