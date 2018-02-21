@@ -6,12 +6,13 @@ dom = {
         dataHandler.sortCardsInBoardsByStatus();
         dataHandler.getBoards(dom.showBoards);
         dataHandler.getTheme(themes.themeHandler);
-        this.addEventListenerToNewBoardIcon();
-        this.addEventListenerToSaveNewBoardButton();
-        this.addEventListenerToBoardDetailButton();
-        this.addEventListenerToCloseBoardDetailButton();
-        this.addEventListenerToEditCardTitle();
-        this.addEventListenerToEditBoardTitle();
+        dom.addEventListenerToNewBoardIcon();
+        dom.addEventListenerToSaveNewBoardButton();
+        dom.addEventListenerToCancelSavingNewBoardButton();
+        dom.addEventListenerToBoardDetailButton();
+        dom.addEventListenerToCloseBoardDetailButton();
+        dom.addEventListenerToEditCardTitle();
+        dom.addEventListenerToEditBoardTitle();
         themes.addEventListenerForDarkTheme();
         themes.addEventListenerForFunTheme();
         // retrieves boards and makes showBoards called
@@ -74,17 +75,21 @@ dom = {
     },
     // here comes more features
     addEventListenerToNewBoardIcon: function () {
-        document.getElementById("new_board_clickable_area").addEventListener("click",this.handleClickOnNewBoardIcon)
+        document.getElementById("new_board_clickable_area").addEventListener("click", dom.handleClickOnNewBoardIcon)
     },
 
     addEventListenerToSaveNewBoardButton: function () {
-        document.getElementById("save_new_board_button").addEventListener("click", this.handleClickOnSaveNewBoardButton)
+        document.getElementById("save_new_board_button").addEventListener("click", dom.handleClickOnSaveNewBoardButton)
+    },
+
+    addEventListenerToCancelSavingNewBoardButton: function () {
+    document.getElementById("cancel_saving_new_board_button").addEventListener("click", dom.handleClickOnCancelSavingNewBoardButton)
     },
 
     addEventListenerToEditBoardTitle: function () {
         let editableBoard = document.getElementsByClassName("titleEditButton");
         for(let i=0; i<editableBoard.length; i++){
-            editableBoard[i].addEventListener("click", this.handleClickOnEditBoardTitle)
+            editableBoard[i].addEventListener("click", dom.handleClickOnEditBoardTitle)
         }
     },
 
@@ -107,6 +112,9 @@ dom = {
 
         let saveNewBoardButton = document.getElementById("save_new_board_button");
         saveNewBoardButton.removeAttribute("hidden");
+
+        let cancelSavingNewBoardButton = document.getElementById("cancel_saving_new_board_button");
+        cancelSavingNewBoardButton.removeAttribute("hidden");
     },
 
     handleClickOnSaveNewBoardButton: function () {
@@ -127,6 +135,20 @@ dom = {
             dom.loadBoards();
         }
 
+    },
+
+        handleClickOnCancelSavingNewBoardButton: function () {
+            let newBoardText = document.getElementById("new_board_text");
+            newBoardText.removeAttribute("hidden");
+
+            let newBoardInput = document.getElementById("new_board_input_field");
+            newBoardInput.setAttribute("hidden", true);
+
+            let saveNewBoardButton = document.getElementById("save_new_board_button");
+            saveNewBoardButton.setAttribute("hidden", true);
+
+            let cancelSavingNewBoardButton = document.getElementById("cancel_saving_new_board_button");
+            cancelSavingNewBoardButton.setAttribute("hidden", true);
     },
 
     addEventListenerToBoardDetailButton: function () {
