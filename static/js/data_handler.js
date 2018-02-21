@@ -24,8 +24,8 @@ dataHandler = {
     },
     _saveData: function(whatToUpdateOrAdd, dataToSave) {
         // it is not called from outside
-        // key parameter: board/card/etc.
-        // age parameter: update old or set new
+        // whatToUpdateOrAdd parameter: board/card/etc.
+        // dataToSave parameter: piece of data specifically to be updated
         if(dataToSave === "theme"){
            localStorage.setItem("theme", JSON.stringify(dataHandler._theme));
         } else {
