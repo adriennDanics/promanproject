@@ -215,9 +215,9 @@ dom = {
 
     addEventListenerToCloseBoardDetailButton: function () {
         let closeDetailButtons = document.getElementsByClassName("fas fa-angle-up");
-        for (let i = 0; i < closeDetailButtons.length; i++) {
-            closeDetailButtons[i].addEventListener("click", function () {
-                let closeDetailButtonId = closeDetailButtons[i].id;
+        for (let closeDetailButton of closeDetailButtons) {
+            closeDetailButton.addEventListener("click", function () {
+                let closeDetailButtonId = closeDetailButton.id;
                 document.getElementById(closeDetailButtonId).setAttribute("hidden", true);
 
                 let DetailButton = document.getElementById("detail" + closeDetailButtonId.replace("closedetail",""));
@@ -270,9 +270,9 @@ dom = {
             let boardId = card.board_id;
             let cardsForThisBoard = dataHandler.getCardsByBoardId(boardId);
             let orderForThisBoardAndDroppedToStatus = [];
-            for (let i = 0; i < cardsForThisBoard.length; i++) {
-                if (cardsForThisBoard[i].status_id === status.id) {
-                    orderForThisBoardAndDroppedToStatus.push(cardsForThisBoard[i].order);
+            for (let cardForThisBoard of cardsForThisBoard) {
+                if (cardForThisBoard.status_id === status.id) {
+                    orderForThisBoardAndDroppedToStatus.push(cardForThisBoard.order);
                 }
             }
 
@@ -289,18 +289,18 @@ dom = {
                 let droppedBeforeCardId = Number(sibling.id.replace("card", ""));
                 let droppedBeforeCard = dataHandler.getCard(droppedBeforeCardId);
                 if (droppedBeforeCard.order === 1) {
-                    for (let i = 0; i < cardsForThisBoard.length; i++) {
-                        if (cardsForThisBoard[i].status_id === status.id && cardsForThisBoard[i].id !== card.id) {
-                            cardsForThisBoard[i].order++;
+                    for (let cardForThisBoard of cardsForThisBoard) {
+                        if (cardForThisBoard.status_id === status.id && cardForThisBoard.id !== card.id) {
+                            cardForThisBoard.order++;
                         }
                     }
                     card.order = 1;
                 } else {
                     card.order = droppedBeforeCard.order;
-                    for (let i = 0; i < cardsForThisBoard.length; i++) {
-                        if (cardsForThisBoard[i].status_id === status.id && cardsForThisBoard[i].id !== card.id) {
-                            if (cardsForThisBoard[i].order >= card.order) {
-                                cardsForThisBoard[i].order++;
+                    for (let cardForThisBoard of cardsForThisBoard) {
+                        if (cardForThisBoard.status_id === status.id && cardForThisBoard.id !== card.id) {
+                            if (cardForThisBoard.order >= card.order) {
+                                cardForThisBoard.order++;
                             }
 
                         }
@@ -312,10 +312,10 @@ dom = {
             let draggedFromCards = draggedFrom.getElementsByClassName("card new");
 
             if (draggedFromCards.length > 0) {
-                for (let i = 0; i < draggedFromCards.length; i++) {
-                    cardId = Number(draggedFromCards[i].id.replace("card", ""));
+                for (let draggedFromCard of draggedFromCards) {
+                    cardId = Number(draggedFromCard.id.replace("card", ""));
                     let oldCard = dataHandler.getCard(cardId);
-                    oldCard.order = i + 1;
+                    oldCard.order ++;
                 }
             }
 
