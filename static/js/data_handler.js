@@ -15,9 +15,13 @@ dataHandler = {
             url: "http://127.0.0.1:5000/data" ,
             method: 'GET',
             success: function(response) {
-                if(response !== "flag"){
+                debugger;
+                if(response.user_id){
                     dataHandler._data = response;
                     callback();
+                } else if(response.message) {
+                    let message = response.message;
+                    dom.loginScreen(message);
                 } else {
                     dom.loginScreen();
                 }

@@ -43,8 +43,9 @@ htmlStrings = {
                 <button type="button" class="btn" id="login_button">Login</button>
                 <a class="btn" href="/register">Registration</a>`
     },
-    initLogOutLink: function () {
-        return `<a class="btn" href="/logout">Logout</a>`
+    initLogOutLink: function (user_id) {
+        return `<h5>Hello, ${user_id}</h5>
+                <a class="btn" href="/logout">Logout</a>`
 
     }
 };

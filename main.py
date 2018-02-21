@@ -8,19 +8,25 @@ app.secret_key = 'IMightJustTakeAShortWalkOfALongPier01'
 
 @app.route("/")
 def boards():
-    return render_template('boards.html', message='Wrong username or password')
+    return render_template('boards.html')
 
 
-@app.route("/session", methods=['GET','POST'])
+@app.route("/session", methods=['GET', 'POST'])
 def login_data():
-    user_data = request.get_json(force=True)
-    user_data_from_database = data_handler.get_user_password_by_name(user_data['user'])
-    verify = data_handler.verify_password(user_data['password'], user_data_from_database['password'])
-    if verify:
-        session['user_id'] = user_data_from_database['id']
-        return redirect('/data')
-    else:
-        return render_template('boards.html', message='Wrong username or password')
+    try:
+        user_data = request.get_json(force=True)
+        user_data_from_database = data_handler.get_user_password_by_name(user_data['user'])
+        verify = data_handler.verify_password(user_data['password'], user_data_from_database['password'])
+        if verify:
+            session['user_id'] = user_data_from_database['id']
+            session['user_name'] = user_data['user']
+            return redirect('data')
+        else:
+            session['message'] = 'Wrong username or password'
+            return redirect('/')
+    except TypeError:
+        session['message'] = 'Wrong username or password'
+        return redirect('/')
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -45,9 +51,13 @@ def data_dump():
         status_data = data_handler.get_all_status_data()
         boards_data['statuses'] = status_data
         boards_data['user_id'] = session['user_id']
+        boards_data['user_name'] = session['user_name']
         return json.dumps(boards_data)
     else:
-        return json.dumps("flag")
+        if 'message' in session:
+            return json.dumps({'message': session['message']})
+        else:
+            return json.dumps("flag")
 
 
 @app.route("/data_new", methods=['POST'])
@@ -63,6 +73,8 @@ def data_received():
 @app.route('/logout')
 def logout():
     session.pop('user_id')
+    session.pop('message')
+    session.pop('user_name')
     return redirect('/')
 
 

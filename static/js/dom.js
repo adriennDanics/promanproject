@@ -22,7 +22,7 @@ dom = {
         let logOutDiv = document.getElementById("logout");
         logOutDiv.innerHTML = "";
 
-        let logOutLink = htmlStrings.initLogOutLink();
+        let logOutLink = htmlStrings.initLogOutLink(dataHandler._data.user_name);
         logOutDiv.insertAdjacentHTML("beforeend", logOutLink);
 
         let boardsDiv = document.getElementById("boards");
@@ -377,9 +377,15 @@ dom = {
         });
     },
 
-    loginScreen: function () {
+    loginScreen: function (message) {
         let boardsDiv = document.getElementById("boards");
         boardsDiv.innerHTML = "";
+
+        if (message){
+            let messageContent = document.getElementById("logout-message");
+            debugger;
+            messageContent.innerHTML = message;
+        }
 
         let htmlForLogin = htmlStrings.initLoginScreen();
         boardsDiv.insertAdjacentHTML("beforeend", htmlForLogin);
