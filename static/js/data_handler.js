@@ -15,9 +15,12 @@ dataHandler = {
             url: "http://127.0.0.1:5000/data" ,
             method: 'GET',
             success: function(response) {
-                dataHandler._data = response;
-                console.log(response);
-                callback();
+                if(response !== "flag"){
+                    dataHandler._data = response;
+                    callback();
+                } else {
+                    dom.loginScreen();
+                }
             }
         });
         dataHandler._theme = JSON.parse(localStorage.getItem("theme"));
@@ -30,7 +33,6 @@ dataHandler = {
            localStorage.setItem("theme", JSON.stringify(dataHandler._theme));
         } else {
             let dataToPost = {"table": whatToUpdateOrAdd, "data": dataToSave};
-            console.log(dataToPost);
             $.ajax({
                 type: "POST",
                 url: "http://127.0.0.1:5000/data_new",
@@ -40,6 +42,17 @@ dataHandler = {
                 dataType: 'json',
                 });
         }
+    },
+    _loginUser: function(dataToSave, callback) {
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: "http://127.0.0.1:5000/session",
+            data: JSON.stringify(dataToSave),
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            success: location.reload()
+            })
     },
     init: function() {
         dataHandler._loadData();
@@ -129,8 +142,7 @@ dataHandler = {
         let newBoard = {
             "id": newBoardID,
             "title": boardTitle,
-            "is_active": true,
-            "user_id": 1
+            "user_id": dataHandler._data.user_id
         };
         dataHandler._data.boards.push(newBoard);
         dataHandler._saveData('boards',newBoard);

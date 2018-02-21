@@ -33,5 +33,18 @@ htmlStrings = {
         return `
                 <i class="fas fa-plus" id="newboardcard${board.id}" hidden="true"></i>
                 `
+    },
+    initLoginScreen: function () {
+        return `<form class="card">
+                <label for="user_name">Username</label>
+                <input type="text" id="user_name" name="user_name" required><br>
+                <label for="password">Password</label><br>
+                <input type="password" id="password" name="password" required><br>
+                <button type="button" class="btn" id="login_button">Login</button>
+                <a class="btn" href="/register">Registration</a>`
+    },
+    initLogOutLink: function () {
+        return `<a class="btn" href="/logout">Logout</a>`
+
     }
 };

@@ -19,6 +19,11 @@ dom = {
         // shows boards appending them to #boards div
         // it adds necessary event listeners also
         let numberOfBoards = boards.length;
+        let logOutDiv = document.getElementById("logout");
+        logOutDiv.innerHTML = "";
+
+        let logOutLink = htmlStrings.initLogOutLink();
+        logOutDiv.insertAdjacentHTML("beforeend", logOutLink);
 
         let boardsDiv = document.getElementById("boards");
         boardsDiv.innerHTML = "";
@@ -312,7 +317,7 @@ dom = {
         drake.on('drop', function(el, target, source, sibling) {
             let cardId = Number(el.id.replace("card", ""));
             let card = dataHandler.getCard(cardId);
-            let statusName = target.dataset.status
+            let statusName = target.dataset.status;
             let status = dataHandler.getStatusIDByName(statusName);
 
             let boardId = card.board_id;
@@ -370,5 +375,19 @@ dom = {
             card.status_id = status.id;
             dataHandler._saveData("cards", card);
         });
+    },
+
+    loginScreen: function () {
+        let boardsDiv = document.getElementById("boards");
+        boardsDiv.innerHTML = "";
+
+        let htmlForLogin = htmlStrings.initLoginScreen();
+        boardsDiv.insertAdjacentHTML("beforeend", htmlForLogin);
+
+        document.getElementById("login_button").addEventListener("click", function(){
+            let userToLogIn = document.getElementById("user_name").value;
+            let passwordToLogIn = document.getElementById("password").value;
+            dataHandler._loginUser({'user':userToLogIn, 'password':passwordToLogIn})
+        })
     }
 };

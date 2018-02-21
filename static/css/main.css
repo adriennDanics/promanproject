@@ -1,4 +1,5 @@
 body{
+    padding: 20px;
     background-image: url("background.jpg");
     background-size: 100%;
     background-repeat: no-repeat;
@@ -38,6 +39,16 @@ h1 {
     padding: 20px 20px 20px 40px;
     font-family: 'Pacifico', cursive;
     text-shadow: 2px 2px palegoldenrod;
+}
+
+h4, h5, label {
+    padding: 10px 10px 10px 2px;
+    font-family: 'Pacifico', cursive;
+    text-shadow: 2px 2px palegoldenrod;
+}
+
+h5.alert {
+    color: #ff0c1c;
 }
 
 #new_board_box.card {
@@ -122,6 +133,17 @@ h1.dark {
     font-family: 'Pacifico', cursive;
     text-shadow: 2px 2px #4caf50;
     color: white;
+}
+
+h4.dark, h5.dark, label.dark {
+    padding: 10px 10px 10px 2px;
+    font-family: 'Pacifico', cursive;
+    text-shadow: 2px 2px #4caf50;
+    color: white;
+}
+
+h5.dark.alert {
+    color: #ff0c1c;
 }
 
 div.dark {
