@@ -36,7 +36,6 @@ dataHandler = {
                 url: "http://127.0.0.1:5000/data_new",
                 data: JSON.stringify(dataToPost),
                 async: false,
-                success: dom.loadBoards(),
                 contentType: "application/json; charset=utf-8",
                 dataType: 'json',
                 });
