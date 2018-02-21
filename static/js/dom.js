@@ -130,6 +130,9 @@ dom = {
             let saveNewBoardButton = document.getElementById("save_new_board_button");
             saveNewBoardButton.setAttribute("hidden", true);
 
+            let cancelSavingNewBoardButton = document.getElementById("cancel_saving_new_board_button");
+            cancelSavingNewBoardButton.setAttribute("hidden", true);
+
             dataHandler.createNewBoard(newBoardTitle);
 
             dom.loadBoards();
