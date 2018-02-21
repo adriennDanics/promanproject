@@ -65,76 +65,6 @@ dom = {
         }
     },
 
-        /*for(let i=0; i<numberOfBoards; i++){
-            let newDivForBoard = document.createElement("div");
-            newDivForBoard.innerHTML = boards[i].title;
-            newDivForBoard.classList.add("row", "card", "bg-light", "container");
-            newDivForBoard.setAttribute("id", "board"+boards[i].id);
-            boardsDiv.appendChild(newDivForBoard);
-
-            let detailButton = document.createElement("i");
-            detailButton.classList.add("fas", "fa-angle-down");
-            detailButton.setAttribute("id", "detail"+boards[i].id);
-            newDivForBoard.appendChild(detailButton);
-
-            let closeDetailButton = document.createElement("i");
-            closeDetailButton.classList.add("fas", "fa-angle-up");
-            closeDetailButton.setAttribute("id", "closedetail"+boards[i].id);
-            closeDetailButton.setAttribute("hidden", true);
-            newDivForBoard.appendChild(closeDetailButton);
-
-            let editButton = document.createElement("i");
-            editButton.classList.add("far", "fa-edit");
-            editButton.setAttribute("id", "edit"+boards[i].id);
-            newDivForBoard.appendChild(editButton);
-
-            let newDivForBoardDetails = document.createElement("div");
-            newDivForBoardDetails.classList.add("row", "bg-info");
-            newDivForBoardDetails.setAttribute("id", "boarddetail" + boards[i].id);
-            newDivForBoardDetails.setAttribute("hidden", true);
-            newDivForBoard.appendChild(newDivForBoardDetails);
-
-            let newButtonForAddCard = document.createElement("button");
-            newButtonForAddCard.classList.add("fas", "fa-plus", "card");
-            newButtonForAddCard.setAttribute("id", "newboardcard" + boards[i].id);
-            newButtonForAddCard.setAttribute("hidden", true);
-            newDivForBoard.appendChild(newButtonForAddCard);
-
-            let statuses = dataHandler.getStatuses();
-            for (let j = 0; j < statuses.length; j++) {
-                let newStatusColumn = document.createElement("div");
-                newStatusColumn.classList.add("col", "bg-secondary");
-                newDivForBoardDetails.appendChild(newStatusColumn);
-
-                let newDivForCardsContainer = document.createElement("div");
-                newDivForCardsContainer.classList.add("dragula-container");
-                newDivForCardsContainer.setAttribute("id", "board"+boards[i].id+"-"+statuses[j].name);
-                newStatusColumn.appendChild(newDivForCardsContainer);
-
-                let newDivForCardsContainerStatus = document.createElement("div");
-                newDivForCardsContainerStatus.classList.add("status");
-                newDivForCardsContainerStatus.setAttribute("id", "status" + statuses[j].name);
-                newDivForCardsContainerStatus.innerHTML = statuses[j].name;
-                newDivForCardsContainer.appendChild(newDivForCardsContainerStatus);
-
-                let cardsByBoardId = dataHandler.getCardsByBoardId(boards[i].id);
-                for (let k = 0; k < cardsByBoardId.length; k++) {
-                    if (cardsByBoardId[k].status_id === statuses[j].id) {
-                        let newDivForCards = document.createElement("div");
-                        newDivForCards.classList.add("card", "new");
-                        newDivForCards.setAttribute("id", "card" + cardsByBoardId[k].id);
-                        newDivForCards.innerHTML = cardsByBoardId[k].title;
-                        newDivForCardsContainer.appendChild(newDivForCards);
-
-                        let newDivForCardEdit = document.createElement("i");
-                        newDivForCardEdit.classList.add("fas", "fa-edit", "forcards");
-                        newDivForCardEdit.setAttribute("id", "cardEdit" + cardsByBoardId[k].id);
-                        newDivForCards.appendChild(newDivForCardEdit)
-                    }
-                }
-            }*/
-
-
     loadCards: function(boardId) {
         // retrieves cards and makes showCards called
     },
@@ -144,7 +74,7 @@ dom = {
     },
     // here comes more features
     addEventListenerToNewBoardIcon: function () {
-        document.getElementById("new_board_icon").addEventListener("click",this.handleClickOnNewBoardIcon)
+        document.getElementById("new_board_clickable_area").addEventListener("click",this.handleClickOnNewBoardIcon)
     },
 
     addEventListenerToSaveNewBoardButton: function () {
@@ -180,19 +110,23 @@ dom = {
     },
 
     handleClickOnSaveNewBoardButton: function () {
-        let newBoardText = document.getElementById("new_board_text");
-        newBoardText.removeAttribute("hidden");
-
-        let newBoardInput = document.getElementById("new_board_input_field");
-        newBoardInput.setAttribute("hidden", true);
-
-        let saveNewBoardButton = document.getElementById("save_new_board_button");
-        saveNewBoardButton.setAttribute("hidden", true);
-
         let newBoardTitle = document.getElementById("new_board_input_field").value;
-        dataHandler.createNewBoard(newBoardTitle);
 
-        dom.loadBoards();
+        if (newBoardTitle.length > 0) {
+            let newBoardText = document.getElementById("new_board_text");
+            newBoardText.removeAttribute("hidden");
+
+            let newBoardInput = document.getElementById("new_board_input_field");
+            newBoardInput.setAttribute("hidden", true);
+
+            let saveNewBoardButton = document.getElementById("save_new_board_button");
+            saveNewBoardButton.setAttribute("hidden", true);
+
+            dataHandler.createNewBoard(newBoardTitle);
+
+            dom.loadBoards();
+        }
+
     },
 
     addEventListenerToBoardDetailButton: function () {
@@ -270,13 +204,12 @@ dom = {
 
         saveButton.addEventListener("click", function() {
             let newBoardTitle = document.getElementById("edit-input-field"+boardID).value;
-            dataHandler.editBoardTitle(newBoardTitle, boardID);
-            document.getElementById("boardspan" + boardID).innerText = newBoardTitle;
-            inputField.setAttribute("hidden", true);
-            saveButton.setAttribute("hidden", true);
-            
-
-
+            if (newBoardTitle.length > 0) {
+                dataHandler.editBoardTitle(newBoardTitle, boardID);
+                document.getElementById("boardspan" + boardID).innerText = newBoardTitle;
+                inputField.setAttribute("hidden", true);
+                saveButton.setAttribute("hidden", true);
+            }
         });
     },
 
@@ -314,16 +247,15 @@ dom = {
             saveButton.setAttribute("hidden", true);
         }
 
-
-
         saveButton.addEventListener("click", function () {
-
             let newCardTitle = document.getElementById("edit-card-input"+cardID).value;
-            dataHandler.editCardTitle(newCardTitle, cardID);
-            document.getElementById("cardTitle" + cardID).innerText = newCardTitle;
-            inputField.setAttribute("hidden", "hidden");
-            saveButton.setAttribute("hidden", "hidden");
 
+            if (newCardTitle.length > 0) {
+                dataHandler.editCardTitle(newCardTitle, cardID);
+                document.getElementById("cardTitle" + cardID).innerText = newCardTitle;
+                inputField.setAttribute("hidden", "hidden");
+                saveButton.setAttribute("hidden", "hidden");
+            }
 
         });
     },

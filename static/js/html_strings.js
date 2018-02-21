@@ -15,7 +15,7 @@ htmlStrings = {
                 </div>`
     },
     initStatusCard: function (status, board) {
-        return`<div class="col bg-secondary">
+        return`<div class="col-sm bg-secondary">
                     <div class="dragula-container" id="board${board.id}-${status.name}" data-board="${board.id}" data-status="${status.name}">
                         <div class="status" id="status${status.name}${board.id}"> 
                             <span id="status${status.name}${board.id}span">${status.name}</span>
