@@ -134,6 +134,7 @@ dataHandler = {
         };
         this._data.cards.push(newCard);
         this._saveData();
+        return newCard
     },
 
     editBoardTitle: function(newTitle, boardID) {
