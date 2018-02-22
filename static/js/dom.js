@@ -1,17 +1,16 @@
 // It uses data_handler.js to visualize elements
 dom = {
     loadBoards: function() {
-        dataHandler.init();
         dataHandler.sortCardsInBoardsByOrder();
         dataHandler.sortCardsInBoardsByStatus();
-        dataHandler.getBoards(this.showBoards);
+        dataHandler.getBoards(dom.showBoards);
         dataHandler.getTheme(themes.themeHandler);
-        this.addEventListenerToNewBoardIcon();
-        this.addEventListenerToSaveNewBoardButton();
-        this.addEventListenerToBoardDetailButton();
-        this.addEventListenerToCloseBoardDetailButton();
-        this.addEventListenerToEditCardTitle();
-        this.addEventListenerToEditBoardTitle();
+        dom.addEventListenerToNewBoardIcon();
+        dom.addEventListenerToSaveNewBoardButton();
+        dom.addEventListenerToBoardDetailButton();
+        dom.addEventListenerToCloseBoardDetailButton();
+        dom.addEventListenerToEditCardTitle();
+        dom.addEventListenerToEditBoardTitle();
         themes.addEventListenerForDarkTheme();
         themes.addEventListenerForFunTheme();
         // retrieves boards and makes showBoards called
@@ -296,7 +295,7 @@ dom = {
             let orderForThisBoardAndDroppedToStatus = [];
             for (let i = 0; i < cardsForThisBoard.length; i++) {
                 if (cardsForThisBoard[i].status_id === status.id) {
-                    orderForThisBoardAndDroppedToStatus.push(cardsForThisBoard[i].order);
+                    orderForThisBoardAndDroppedToStatus.push(cardsForThisBoard[i].order_num);
                 }
             }
 
@@ -305,26 +304,26 @@ dom = {
             if (sibling === null) {
 
                 if (orderForThisBoardAndDroppedToStatus.length > 0) {
-                    card.order = maxOrderForThisBoardAndStatus + 1;
+                    card.order_num = maxOrderForThisBoardAndStatus + 1;
                 } else {
-                    card.order = 1;
+                    card.order_num = 1;
                 }
             } else {
                 let droppedBeforeCardId = Number(sibling.id.replace("card", ""));
                 let droppedBeforeCard = dataHandler.getCard(droppedBeforeCardId);
-                if (droppedBeforeCard.order === 1) {
+                if (droppedBeforeCard.order_num === 1) {
                     for (let i = 0; i < cardsForThisBoard.length; i++) {
                         if (cardsForThisBoard[i].status_id === status.id && cardsForThisBoard[i].id !== card.id) {
-                            cardsForThisBoard[i].order++;
+                            cardsForThisBoard[i].order_num++;
                         }
                     }
-                    card.order = 1;
+                    card.order_num = 1;
                 } else {
-                    card.order = droppedBeforeCard.order;
+                    card.order_num = droppedBeforeCard.order_num;
                     for (let i = 0; i < cardsForThisBoard.length; i++) {
                         if (cardsForThisBoard[i].status_id === status.id && cardsForThisBoard[i].id !== card.id) {
-                            if (cardsForThisBoard[i].order >= card.order) {
-                                cardsForThisBoard[i].order++;
+                            if (cardsForThisBoard[i].order_num >= card.order_num) {
+                                cardsForThisBoard[i].order_num++;
                             }
 
                         }
@@ -339,12 +338,12 @@ dom = {
                 for (let i = 0; i < draggedFromCards.length; i++) {
                     cardId = Number(draggedFromCards[i].id.replace("card", ""));
                     let oldCard = dataHandler.getCard(cardId);
-                    oldCard.order = i + 1;
+                    oldCard.order_num = i + 1;
                 }
             }
 
             card.status_id = status.id;
-            dataHandler._saveData();
+            dataHandler._saveData("cards", card);
         });
     }
 };
