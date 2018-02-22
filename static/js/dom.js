@@ -68,6 +68,11 @@ dom = {
 
     },
 
+    addEventlistenerToSaveNewCard: function (boardid) {
+        let addNewCardButton = document.getElementById("newboardcard" + boardid);
+        addNewCardButton.addEventListener("click", dom.handleClickOnNewCardIcon(boardid))
+    },
+
     handleClickOnNewBoardIcon: function () {
         document.getElementById("new_board_input_field").value = "";
 
@@ -104,6 +109,7 @@ dom = {
 
             boardsDiv = document.getElementById("boards");
             dom.initBoards(board, boardsDiv);
+            dom.addEventListenerToEditSingleBoardTitle(board.id);
             dom.addEventlistenerToSingleBoard(board.id)
 
 
@@ -111,19 +117,65 @@ dom = {
         }
 
     },
+    handleClickOnNewCardIcon: function (boardid) {
+        let newCardButtonId = document.getElementById("newboardcard" + boardid);
+        newCardButtonId.removeAttribute("hidden");
 
-        handleClickOnCancelSavingNewBoardButton: function () {
-            let newBoardText = document.getElementById("new_board_text");
-            newBoardText.removeAttribute("hidden");
+        newCardButtonId.addEventListener("click", function () {
+            newCardButtonId.setAttribute("hidden", true);
+            let saveButtonForNewCard = document.getElementById("add-card-button" + boardid);
+            let textBoxForNewCard = document.getElementById("add-card-input" + boardid);
+            let cancelButtonForNewCard = document.getElementById("add-card-cancel" + boardid);
+            if(saveButtonForNewCard.hasAttribute("hidden") && textBoxForNewCard.hasAttribute("hidden")
+                                                            && cancelButtonForNewCard.hasAttribute("hidden")) {
+                saveButtonForNewCard.removeAttribute("hidden");
+                textBoxForNewCard.removeAttribute("hidden");
+                cancelButtonForNewCard.removeAttribute("hidden")
+            } else {
+                saveButtonForNewCard.setAttribute("hidden", true);
+                textBoxForNewCard.setAttribute("hidden", true);
+                cancelButtonForNewCard.setAttribute("hidden", true)
 
-            let newBoardInput = document.getElementById("new_board_input_field");
-            newBoardInput.setAttribute("hidden", true);
+            }
 
-            let saveNewBoardButton = document.getElementById("save_new_board_button");
-            saveNewBoardButton.setAttribute("hidden", true);
+            saveButtonForNewCard.addEventListener("click", function (){
+                let newCardTitleGiven = textBoxForNewCard.value;
+                if(newCardTitleGiven.length !== 0) {
+                    let newCard = dataHandler.createNewCard(newCardTitleGiven, boardid, 1);
+                    let boardDivDetailContainer = document.getElementById("board" + boardid + "-New");
+                    boardDivDetailContainer.insertAdjacentHTML("beforeend", htmlStrings.initCard(newCard));
+                    dom.addEventlistenerToSingleCard(newCard.id);
+                    textBoxForNewCard.value = "";
+                    saveButtonForNewCard.setAttribute("hidden", true);
+                    textBoxForNewCard.setAttribute("hidden", true);
+                    cancelButtonForNewCard.setAttribute("hidden", true);
+                    newCardButtonId.removeAttribute("hidden");
 
-            let cancelSavingNewBoardButton = document.getElementById("cancel_saving_new_board_button");
-            cancelSavingNewBoardButton.setAttribute("hidden", true);
+                }
+            }, false);
+
+            cancelButtonForNewCard.addEventListener("click", function () {
+                textBoxForNewCard.value = "";
+                saveButtonForNewCard.setAttribute("hidden", true);
+                textBoxForNewCard.setAttribute("hidden", true);
+                cancelButtonForNewCard.setAttribute("hidden", true);
+                newCardButtonId.removeAttribute("hidden");
+            })
+        })
+    },
+
+    handleClickOnCancelSavingNewBoardButton: function () {
+        let newBoardText = document.getElementById("new_board_text");
+        newBoardText.removeAttribute("hidden");
+
+        let newBoardInput = document.getElementById("new_board_input_field");
+        newBoardInput.setAttribute("hidden", true);
+
+        let saveNewBoardButton = document.getElementById("save_new_board_button");
+        saveNewBoardButton.setAttribute("hidden", true);
+
+        let cancelSavingNewBoardButton = document.getElementById("cancel_saving_new_board_button");
+        cancelSavingNewBoardButton.setAttribute("hidden", true);
     },
 
     addEventListenerToBoardDetailButton: function () {
@@ -141,48 +193,9 @@ dom = {
                     boardDetail.setAttribute("hidden", true)
                 }
 
-                let newCardButtonId = document.getElementById("newboardcard" + detailButtonId.replace("boardspan",""));
-                newCardButtonId.removeAttribute("hidden");
 
-                newCardButtonId.addEventListener("click", function () {
-                    newCardButtonId.setAttribute("hidden", true);
-                    let saveButtonForNewCard = document.getElementById("add-card-button" + detailButtonId.replace("boardspan",""));
-                    let textBoxForNewCard = document.getElementById("add-card-input" + detailButtonId.replace("boardspan",""));
-                    let cancelButtonForNewCard = document.getElementById("add-card-cancel" + detailButtonId.replace("boardspan",""));
-                    if(saveButtonForNewCard.hasAttribute("hidden") && textBoxForNewCard.hasAttribute("hidden")
-                                                                    && cancelButtonForNewCard.hasAttribute("hidden")) {
-                        saveButtonForNewCard.removeAttribute("hidden");
-                        textBoxForNewCard.removeAttribute("hidden");
-                        cancelButtonForNewCard.removeAttribute("hidden")
-                    } else {
-                        saveButtonForNewCard.setAttribute("hidden", true);
-                        textBoxForNewCard.setAttribute("hidden", true);
-                        cancelButtonForNewCard.setAttribute("hidden", true)
-
-                    }
-
-                    saveButtonForNewCard.addEventListener("click", function (){
-                        let newCardTitleGiven = textBoxForNewCard.value;
-                        if(newCardTitleGiven.length !== 0) {
-                            let newCard = dataHandler.createNewCard(newCardTitleGiven, detailButtonId.replace("boardspan", ""), 1);
-                            let boardDivDetailContainer = document.getElementById("board" + newCard.board_id + "-New");
-                            boardDivDetailContainer.insertAdjacentHTML("beforeend", htmlStrings.initCard(newCard))
-                            saveButtonForNewCard.setAttribute("hidden", true);
-                            textBoxForNewCard.setAttribute("hidden", true);
-                            cancelButtonForNewCard.setAttribute("hidden", true);
-                            newCardButtonId.removeAttribute("hidden");
-                        }
-                    }, false);
-                    
-                    cancelButtonForNewCard.addEventListener("click", function () {
-                        saveButtonForNewCard.setAttribute("hidden", true);
-                        textBoxForNewCard.setAttribute("hidden", true);
-                        cancelButtonForNewCard.setAttribute("hidden", true);
-                        newCardButtonId.removeAttribute("hidden");
-                    })
                     
                 }, false)
-            });
         }
     },
 
@@ -360,6 +373,7 @@ dom = {
             }
             let drake = drag.addDragNDrop(cardContainerListForBoard);
             dom.handleCardDrop(drake);
+            dom.addEventlistenerToSaveNewCard(board.id)
     },
 
     addEventlistenerToSingleBoard: function (boardid) {
@@ -373,56 +387,23 @@ dom = {
                 boardDetail.setAttribute("hidden", true)
             }
 
-            let newCardButtonId = document.getElementById("newboardcard" + boardid);
-            newCardButtonId.removeAttribute("hidden");
+            dom.addEventlistenerToSaveNewCard(boardid);
 
-            newCardButtonId.addEventListener("click", function () {
-                newCardButtonId.setAttribute("hidden", true);
-                let saveButtonForNewCard = document.getElementById("add-card-button" + boardid);
-                let textBoxForNewCard = document.getElementById("add-card-input" + boardid);
-                let cancelButtonForNewCard = document.getElementById("add-card-cancel" + boardid);
-                if (saveButtonForNewCard.hasAttribute("hidden") && textBoxForNewCard.hasAttribute("hidden")
-                    && cancelButtonForNewCard.hasAttribute("hidden")) {
-                    saveButtonForNewCard.removeAttribute("hidden");
-                    textBoxForNewCard.removeAttribute("hidden");
-                    cancelButtonForNewCard.removeAttribute("hidden")
-                } else {
-                    saveButtonForNewCard.setAttribute("hidden", true);
-                    textBoxForNewCard.setAttribute("hidden", true);
-                    cancelButtonForNewCard.setAttribute("hidden", true)
-
-                }
-
-                saveButtonForNewCard.addEventListener("click", function () {
-                    let newCardTitleGiven = textBoxForNewCard.value;
-                    if (newCardTitleGiven.length !== 0) {
-                        let newCard = dataHandler.createNewCard(newCardTitleGiven, detailButtonId.replace("boardspan", ""), 1);
-                        let boardDivDetailContainer = document.getElementById("board" + newCard.board_id + "-New");
-                        boardDivDetailContainer.insertAdjacentHTML("beforeend", htmlStrings.initCard(newCard));
-                        saveButtonForNewCard.setAttribute("hidden", true);
-                        textBoxForNewCard.setAttribute("hidden", true);
-                        cancelButtonForNewCard.setAttribute("hidden", true);
-                        newCardButtonId.removeAttribute("hidden");
-                    }
-                }, false);
-
-                cancelButtonForNewCard.addEventListener("click", function () {
-                    saveButtonForNewCard.setAttribute("hidden", true);
-                    textBoxForNewCard.setAttribute("hidden", true);
-                    cancelButtonForNewCard.setAttribute("hidden", true);
-                    newCardButtonId.removeAttribute("hidden");
-                })
-            })
         })
     },
 
 
     addEventlistenerToSingleCard: function (cardid) {
-        let editableCards = document.getElementsByClassName("fas fa-edit");
-        for(let editableCard of editableCards){
-            editableCard.addEventListener("click", dom.handleClickOnEditCardTitle)
-        }
-    }
+        let editableCard = document.getElementById("cardEdit" + cardid);
+        editableCard.addEventListener("click", dom.handleClickOnEditCardTitle)
+
+    },
+
+    addEventListenerToEditSingleBoardTitle: function (boardid) {
+        let editableBoard = document.getElementById("edit" + boardid);
+        editableBoard.addEventListener("click", dom.handleClickOnEditBoardTitle)
+
+    },
 
 
 };
