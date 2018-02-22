@@ -60,7 +60,7 @@ htmlStrings = {
     },
     initLogOutLink: function (user_id) {
         return `<h5>Hello, ${user_id}</h5>
-                <a class="btn" href="/logout">Logout</a>`
+                <a class="btn logoutlink" href="/logout">Logout</a>`
 
     }
 };

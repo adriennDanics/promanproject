@@ -40,7 +40,7 @@ h1 {
     text-shadow: 2px 2px palegoldenrod;
 }
 
-h4, h5, label {
+h4, h5, label, .logoutlink {
     padding: 10px 10px 10px 2px;
     font-family: 'Pacifico', cursive;
     text-shadow: 2px 2px palegoldenrod;
@@ -101,13 +101,21 @@ img.footer {
 .fas.dark {
     text-align: center;
     display: inline-block;
-    color: #ffffff;
+    color: #0c0c0c;
 }
 
 .far.dark {
     text-align: right;
     display: inline-block;
-    color: white;
+    color: #060606;
+}
+
+.fa-plus.dark card{
+    text-align: center;
+}
+
+.far.dark {
+    width: 16px;
 }
 
 .card.dark {
@@ -135,7 +143,7 @@ h1.dark {
     color: white;
 }
 
-h4.dark, h5.dark, label.dark {
+h4.dark, h5.dark, label.dark, .logoutlink.dark {
     padding: 10px 10px 10px 2px;
     font-family: 'Pacifico', cursive;
     text-shadow: 2px 2px #4caf50;
