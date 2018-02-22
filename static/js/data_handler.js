@@ -35,7 +35,7 @@ dataHandler = {
         // dataToSave parameter: piece of data specifically to be updated
         if(dataToSave === "theme"){
            localStorage.setItem("theme", JSON.stringify(dataHandler._theme));
-        } else {
+        } else if (whatToUpdateOrAdd === "boards") {
             let dataToPost = {"table": whatToUpdateOrAdd, "data": dataToSave};
             $.ajax({
                 type: "POST",
@@ -44,7 +44,18 @@ dataHandler = {
                 async: false,
                 contentType: "application/json; charset=utf-8",
                 dataType: 'json',
+                success:location.reload()
                 });
+        } else {
+            let dataToPost = {"table": whatToUpdateOrAdd, "data": dataToSave};
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:5000/data_new",
+                data: JSON.stringify(dataToPost),
+                async: false,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json'
+            })
         }
     },
     _loginUser: function(dataToSave, callback) {
@@ -136,28 +147,19 @@ dataHandler = {
 
         }
     },
+
     createNewBoard: function(boardTitle) {
         // creates new board, saves it and calls the callback function with its data
-        let existingBoardIDs = [];
-        for (let i = 0; i < dataHandler._data.boards.length; i++) {
-            existingBoardIDs.push(dataHandler._data.boards[i].id);
-        }
-        let newBoardID = Math.max(...existingBoardIDs) + 1;
         let newBoard = {
-            "id": newBoardID,
             "title": boardTitle,
             "user_id": dataHandler._data.user_id
         };
         dataHandler._data.boards.push(newBoard);
         dataHandler._saveData('boards',newBoard);
     },
+
     createNewCard: function(cardTitle, boardId, statusId) {
         // creates new card, saves it and calls the callback function with its data
-        let existingCardIDs = [];
-        for (let i = 0; i < dataHandler._data.cards.length; i++) {
-            existingCardIDs.push(dataHandler._data.cards[i].id);
-        }
-        let newCardID = Math.max(...existingCardIDs) + 1;
         let cardsForThisBoard = dataHandler.getCardsByBoardId(Number(boardId));
         let orderForThisBoard = [];
         for (let i = 0; i < cardsForThisBoard.length; i++) {
@@ -171,7 +173,6 @@ dataHandler = {
             var newCardOrder = 1;
         }
         let newCard = {
-            "id": newCardID,
             "title": cardTitle,
             "board_id": Number(boardId),
             "status_id": statusId,
