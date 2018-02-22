@@ -147,6 +147,7 @@ dom = {
                     let boardDivDetailContainer = document.getElementById("board" + boardid + "-New");
                     boardDivDetailContainer.insertAdjacentHTML("beforeend", htmlStrings.initCard(newCard));
                     dom.addEventlistenerToSingleCard(newCard.id);
+                    dom.addEventListenerToDeleteCardButton(newCard.id);
                     textBoxForNewCard.value = "";
                     saveButtonForNewCard.setAttribute("hidden", true);
                     textBoxForNewCard.setAttribute("hidden", true);
@@ -248,7 +249,7 @@ dom = {
 
     handleClickOnEditCardTitle: function () {
         let cardElementID = this.parentElement.getAttribute("id");
-        let cardID = Number(cardElementID.replace("card", ""));
+        let cardID = Number(cardElementID.replace("cardButton", ""));
 
         let inputField = document.getElementById("edit-card-input" + cardID);
         let saveButton = document.getElementById("edit-card-button" + cardID);
@@ -362,6 +363,7 @@ dom = {
                     if(card.status_id === status.id){
                         let htmlForCard = htmlStrings.initCard(card);
                         boardDivDetailContainer.insertAdjacentHTML("beforeend", htmlForCard);
+                        dom.addEventListenerToDeleteCardButton(card.id);
                     }
                 }
             }
@@ -375,7 +377,8 @@ dom = {
             }
             let drake = drag.addDragNDrop(cardContainerListForBoard);
             dom.handleCardDrop(drake);
-            dom.addEventlistenerToSaveNewCard(board.id)
+            dom.addEventlistenerToSaveNewCard(board.id);
+            dom.addEventListenerToDeleteBoardButton(board.id)
     },
 
     addEventlistenerToSingleBoard: function (boardid) {
@@ -423,6 +426,20 @@ dom = {
             let userToLogIn = document.getElementById("user_name").value;
             let passwordToLogIn = document.getElementById("password").value;
             dataHandler._loginUser({'user':userToLogIn, 'password':passwordToLogIn})
+        })
+    },
+
+    addEventListenerToDeleteBoardButton: function (boardId) {
+        let deleteBoardButton = document.getElementById('delete_board' + boardId);
+        deleteBoardButton.addEventListener('click', function () {
+            dataHandler.changeBoardStatusToInactive(boardId)
+        })
+    },
+
+    addEventListenerToDeleteCardButton: function (cardId) {
+        let deleteCardButton = document.getElementById('cardDelete' + cardId);
+        deleteCardButton.addEventListener('click', function () {
+            dataHandler.changeCardStatusToInactive(cardId)
         })
     }
 };

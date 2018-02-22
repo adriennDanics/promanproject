@@ -14,13 +14,13 @@ def verify_password(plain_text_password, hashed_password):
 
 @db_connection.connection_handler
 def get_all_board_data(cursor, user_id):
-    cursor.execute('''SELECT * FROM boards WHERE user_id=%(user_id)s ORDER BY id;''', {'user_id': user_id})
+    cursor.execute('''SELECT * FROM boards WHERE user_id=%(user_id)s AND boards.is_active=1::BIT ORDER BY id;''', {'user_id': user_id})
     return {'boards': cursor.fetchall()}
 
 
 @db_connection.connection_handler
 def get_all_card_data(cursor):
-    cursor.execute('''SELECT * FROM cards;''')
+    cursor.execute('''SELECT * FROM cards WHERE is_active=1::BIT ;''')
     return cursor.fetchall()
 
 

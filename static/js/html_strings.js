@@ -2,9 +2,14 @@ htmlStrings = {
     initBoard: function (board) {
         return `<div class="row card bg-light container" id="board${board.id}">
                     <span class="boards" id="boardspan${board.id}">${board.title}</span>
-                    <button type="button" class="titleEditButton" id="edit${board.id}">
-                        <i class="far fa-edit" id="edit${board.id}"></i>
-                    </button> 
+                    <span>
+                        <button type="button" class="titleEditButton" id="edit${board.id}">
+                            <i class="far fa-edit"></i>
+                        </button> 
+                        <button type="button" class="titleDeleteButton" id="delete_board${board.id}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </span> 
                     <input class="form-control" hidden="true" value="${board.title}" type="text" id="edit-input-field${board.id}">
                     <button hidden="true" class="btn" id="edit-input-button${board.id}">Save</button>        
                 </div>`
@@ -26,7 +31,12 @@ htmlStrings = {
     initCard: function (card) {
         return `<div class="card new" id="card${card.id}">
                     <span id="cardTitle${card.id}">${card.title}</span>
-                    <i class="fas fa-edit forcards" id="cardEdit${card.id}"></i>
+                    <span id="cardButton${card.id}">
+                        <i class="fas fa-edit forcards" id="cardEdit${card.id}"></i>
+                        <i class="fas fa-trash-alt" id="cardDelete${card.id}"></i>
+                        
+                    </span>
+                    
                     <input class="form-control" id="edit-card-input${card.id}" value="${card.title}" type="text"  hidden required>
                     <button class="btn" id="edit-card-button${card.id}" hidden>Save</button>
                 </div>`

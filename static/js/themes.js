@@ -29,7 +29,7 @@ themes = {
             header[i].classList.add("dark")
         }
         let cardsForBoards = document.getElementsByClassName("row");
-        for(let i=0;i<cardsForBoards.length;i++) {
+        for(let i=1;i<cardsForBoards.length;i++) {
             cardsForBoards[i].classList.remove("bg-light");
             cardsForBoards[i].classList.add("bg-dark")
         }
@@ -73,7 +73,7 @@ themes = {
             header[i].classList.remove("dark")
         }
         let cardsForBoards = document.getElementsByClassName("row");
-        for(let i=0;i<cardsForBoards.length;i++) {
+        for(let i=1;i<cardsForBoards.length;i++) {
             cardsForBoards[i].classList.add("bg-light");
             cardsForBoards[i].classList.remove("bg-dark")
         }
