@@ -1,6 +1,8 @@
 // It uses data_handler.js to visualize elements
 dom = {
     loadBoards: function() {
+        let boardsDiv = document.getElementById("boards");
+        boardsDiv.innerHTML = '';
         dataHandler.sortCardsInBoardsByOrder();
         dataHandler.sortCardsInBoardsByStatus();
         dataHandler.getBoards(dom.showBoards);
@@ -335,7 +337,7 @@ dom = {
             }
 
             card.status_id = status.id;
-            dataHandler._saveData("cards", card);
+            dataHandler._saveData("cards", card, dom.showBoards);
         });
     },
 
@@ -411,6 +413,7 @@ dom = {
 
     loginScreen: function (message) {
         let boardsDiv = document.getElementById("boards");
+        boardsDiv.classList.remove("loader");
         boardsDiv.innerHTML = "";
 
         if (message){
@@ -425,6 +428,8 @@ dom = {
         document.getElementById("login_button").addEventListener("click", function(){
             let userToLogIn = document.getElementById("user_name").value;
             let passwordToLogIn = document.getElementById("password").value;
+            boardsDiv.innerHTML="";
+            boardsDiv.classList.add("loader");
             dataHandler._loginUser({'user':userToLogIn, 'password':passwordToLogIn})
         })
     },
@@ -432,6 +437,8 @@ dom = {
     addEventListenerToDeleteBoardButton: function (boardId) {
         let deleteBoardButton = document.getElementById('delete_board' + boardId);
         deleteBoardButton.addEventListener('click', function () {
+            let deletedBoard = document.getElementById('board' + boardId);
+            deletedBoard.setAttribute("hidden", true);
             dataHandler.changeBoardStatusToInactive(boardId)
         })
     },
@@ -439,6 +446,8 @@ dom = {
     addEventListenerToDeleteCardButton: function (cardId) {
         let deleteCardButton = document.getElementById('cardDelete' + cardId);
         deleteCardButton.addEventListener('click', function () {
+            let deletedCard = document.getElementById('card' + cardId);
+            deletedCard.setAttribute("hidden", true);
             dataHandler.changeCardStatusToInactive(cardId)
         })
     }

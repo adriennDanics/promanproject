@@ -10,25 +10,27 @@ dataHandler = {
     _loadData: function(callback) {
         // it is not called from outside
         // loads data from local storage, parses it and put into this._data property
-        $.ajax({
-        dataType: "json",
-        url: "http://127.0.0.1:5000/data" ,
-        method: 'GET',
-        success: function(response) {
-            if(response.user_id){
-                dataHandler._data = response;
-                callback();
-            } else if(response.message) {
-                let message = response.message;
-                dom.loginScreen(message);
-            } else {
-                dom.loginScreen();
-            }
-        }
-    });
-    dataHandler._theme = JSON.parse(localStorage.getItem("theme"));
+        setTimeout(function () {
+            $.ajax({
+                dataType: "json",
+                url: "http://127.0.0.1:5000/data" ,
+                method: 'GET',
+                success: function(response) {
+                    if(response.user_id){
+                        dataHandler._data = response;
+                        callback();
+                    } else if(response.message) {
+                        let message = response.message;
+                        dom.loginScreen(message);
+                    } else {
+                        dom.loginScreen();
+                    }
+                }
+            });
+            dataHandler._theme = JSON.parse(localStorage.getItem("theme"));
+        }, 1000);
     },
-    _saveData: function(whatToUpdateOrAdd, dataToSave) {
+    _saveData: function(whatToUpdateOrAdd, dataToSave, callback) {
         // it is not called from outside
         // whatToUpdateOrAdd parameter: board/card/etc.
         // dataToSave parameter: piece of data specifically to be updated
@@ -43,11 +45,11 @@ dataHandler = {
                 async: false,
                 contentType: "application/json; charset=utf-8",
                 dataType: 'json',
-                success: location.reload()
+                success: dataHandler._loadData(callback)
             });
         }
     },
-    _loginUser: function(dataToSave, callback) {
+    _loginUser: function(dataToSave) {
         debugger;
         $.ajax({
             type: "POST",
@@ -55,7 +57,7 @@ dataHandler = {
             data: JSON.stringify(dataToSave),
             contentType: "application/json; charset=utf-8",
             dataType: 'json',
-            success: location.reload()
+            success: init()
             })
     },
     init: function() {
@@ -144,7 +146,7 @@ dataHandler = {
             "user_id": dataHandler._data.user_id
         };
         dataHandler._data.boards.push(newBoard);
-        dataHandler._saveData('boards',newBoard);
+        dataHandler._saveData('boards',newBoard, init);
         return newBoard
     },
 
@@ -169,14 +171,14 @@ dataHandler = {
             "order_num": Number(newCardOrder)
         };
         dataHandler._data.cards.push(newCard);
-        dataHandler._saveData("cards", newCard);
+        dataHandler._saveData("cards", newCard, init);
         return newCard
     },
 
     editBoardTitle: function(newTitle, boardID) {
         let board = dataHandler.getBoard(boardID);
         board.title=newTitle;
-        dataHandler._saveData("boards", board);
+        dataHandler._saveData("boards", board, dom.showBoards);
     },
     getTheme: function (callback) {
         callback(dataHandler._theme);
@@ -190,7 +192,7 @@ dataHandler = {
     editCardTitle: function (newTitle, cardID) {
         let card = dataHandler.getCard(cardID);
         card.title = newTitle;
-        dataHandler._saveData("cards", card);
+        dataHandler._saveData("cards", card, dom.showBoards);
 
     },
 
@@ -211,12 +213,12 @@ dataHandler = {
     changeBoardStatusToInactive: function(boardID) {
         let board = dataHandler.getBoard(boardID);
         board.is_active = 0;
-        dataHandler._saveData("boards", board);
+        dataHandler._saveData("boards", board, init);
     },
 
     changeCardStatusToInactive: function (cardId) {
         let card = dataHandler.getCard(cardId);
         card.is_active = 0;
-        dataHandler._saveData("cards", card);
+        dataHandler._saveData("cards", card, init);
     }
 };

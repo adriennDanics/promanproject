@@ -22,7 +22,7 @@ def login_data():
         if verify:
             session['user_id'] = user_data_from_database['id']
             session['user_name'] = user_data['user']
-            return redirect('data')
+            return redirect('/data')
         else:
             session['message'] = 'Wrong username or password'
             return redirect('/')
