@@ -10,25 +10,23 @@ dataHandler = {
     _loadData: function(callback) {
         // it is not called from outside
         // loads data from local storage, parses it and put into this._data property
-        setTimeout(function () {
-            $.ajax({
-            dataType: "json",
-            url: "http://127.0.0.1:5000/data" ,
-            method: 'GET',
-            success: function(response) {
-                if(response.user_id){
-                    dataHandler._data = response;
-                    callback();
-                } else if(response.message) {
-                    let message = response.message;
-                    dom.loginScreen(message);
-                } else {
-                    dom.loginScreen();
-                }
+        $.ajax({
+        dataType: "json",
+        url: "http://127.0.0.1:5000/data" ,
+        method: 'GET',
+        success: function(response) {
+            if(response.user_id){
+                dataHandler._data = response;
+                callback();
+            } else if(response.message) {
+                let message = response.message;
+                dom.loginScreen(message);
+            } else {
+                dom.loginScreen();
             }
-        });
-        dataHandler._theme = JSON.parse(localStorage.getItem("theme"));
-        }, 500);
+        }
+    });
+    dataHandler._theme = JSON.parse(localStorage.getItem("theme"));
     },
     _saveData: function(whatToUpdateOrAdd, dataToSave) {
         // it is not called from outside
@@ -209,4 +207,16 @@ dataHandler = {
             return a.status_id - b.status_id
         });
     },
+
+    changeBoardStatusToInactive: function(boardID) {
+        let board = dataHandler.getBoard(boardID);
+        board.is_active = 0;
+        dataHandler._saveData("boards", board);
+    },
+
+    changeCardStatusToInactive: function (cardId) {
+        let card = dataHandler.getCard(cardId);
+        card.is_active = 0;
+        dataHandler._saveData("cards", card);
+    }
 };

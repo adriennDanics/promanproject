@@ -6,7 +6,7 @@ body{
     background-attachment: fixed;
 }
 
-.fa-angle-down, .fa-angle-up, .fa-edit {
+.fa-angle-down, .fa-angle-up {
     margin-left: 50%;
     width: 16px;
 }
@@ -15,7 +15,6 @@ body{
     text-align: center;
 }
 .far {
-    margin-left: 98%;
     width: 16px;
 }
 
