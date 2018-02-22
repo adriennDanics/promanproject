@@ -23,46 +23,10 @@ dom = {
         let numberOfBoards = boards.length;
 
         let boardsDiv = document.getElementById("boards");
-        boardsDiv.innerHTML = "";
 
         for (let board of boards) {
+            dom.initBoards(board, boardsDiv)
 
-            let htmlForBoard = htmlStrings.initBoard(board);
-            boardsDiv.insertAdjacentHTML("beforeend", htmlForBoard);
-
-            let boardDiv = document.getElementById("board" + board.id);
-            let htmlForDetail = htmlStrings.initDetails(board);
-            boardDiv.insertAdjacentHTML("beforeend", htmlForDetail);
-
-            let statuses = dataHandler.getStatuses();
-            for(let status of statuses){
-                let boardDivDetail = document.getElementById("boarddetail" + board.id);
-                let htmlForStatus = htmlStrings.initStatusCard(status, board);
-                boardDivDetail.insertAdjacentHTML("beforeend", htmlForStatus);
-                if(status.name === "New") {
-                    let newStatusDiv = document.getElementById("statusNew" + board.id + "span");
-                    newStatusDiv.insertAdjacentHTML("beforeend", htmlStrings.initNewCardButton(board));
-                }
-
-                let cards = dataHandler.getCardsByBoardId(board.id);
-                let boardDivDetailContainer = document.getElementById("board" + board.id + "-" + status.name);
-                for(let card of cards){
-                    if(card.status_id === status.id){
-                        let htmlForCard = htmlStrings.initCard(card);
-                        boardDivDetailContainer.insertAdjacentHTML("beforeend", htmlForCard);
-                    }
-                }
-            }
-
-            let cardContainerListForBoard = [];
-            let dragulaContainersForBoard = document.getElementsByClassName('dragula-container');
-            for (let container of dragulaContainersForBoard) {
-                if (Number(container.dataset.board) === board.id){
-                    cardContainerListForBoard.push(container)
-                }
-            }
-            let drake = drag.addDragNDrop(cardContainerListForBoard);
-            dom.handleCardDrop(drake);
         }
     },
 
@@ -75,21 +39,24 @@ dom = {
     },
     // here comes more features
     addEventListenerToNewBoardIcon: function () {
-        document.getElementById("new_board_clickable_area").addEventListener("click", dom.handleClickOnNewBoardIcon)
+        let new_board_icon = document.getElementById("new_board_clickable_area");
+        new_board_icon.addEventListener("click", dom.handleClickOnNewBoardIcon)
     },
 
     addEventListenerToSaveNewBoardButton: function () {
-        document.getElementById("save_new_board_button").addEventListener("click", dom.handleClickOnSaveNewBoardButton)
+        let save_new_board_butt = document.getElementById("save_new_board_button");
+        save_new_board_butt.addEventListener("click", dom.handleClickOnSaveNewBoardButton)
     },
 
     addEventListenerToCancelSavingNewBoardButton: function () {
-    document.getElementById("cancel_saving_new_board_button").addEventListener("click", dom.handleClickOnCancelSavingNewBoardButton)
+        let cancel_button = document.getElementById("cancel_saving_new_board_button");
+        cancel_button.addEventListener("click", dom.handleClickOnCancelSavingNewBoardButton)
     },
 
     addEventListenerToEditBoardTitle: function () {
-        let editableBoard = document.getElementsByClassName("titleEditButton");
-        for(let i=0; i<editableBoard.length; i++){
-            editableBoard[i].addEventListener("click", dom.handleClickOnEditBoardTitle)
+        let editableBoards = document.getElementsByClassName("titleEditButton");
+        for(let editableBoard of editableBoards){
+            editableBoard.addEventListener("click", dom.handleClickOnEditBoardTitle)
         }
     },
 
@@ -133,9 +100,14 @@ dom = {
             let cancelSavingNewBoardButton = document.getElementById("cancel_saving_new_board_button");
             cancelSavingNewBoardButton.setAttribute("hidden", true);
 
-            dataHandler.createNewBoard(newBoardTitle);
+            board = dataHandler.createNewBoard(newBoardTitle);
 
-            dom.loadBoards();
+            boardsDiv = document.getElementById("boards");
+            dom.initBoards(board, boardsDiv);
+            dom.addEventlistenerToSingleBoard(board.id)
+
+
+
         }
 
     },
@@ -156,7 +128,9 @@ dom = {
 
     addEventListenerToBoardDetailButton: function () {
         let detailForBoards = document.getElementsByClassName("boards");
+
         for (let detailForBoard of detailForBoards) {
+
             detailForBoard.addEventListener("click", function () {
 
                 let detailButtonId = detailForBoard.id;
@@ -347,5 +321,108 @@ dom = {
             card.status_id = status.id;
             dataHandler._saveData();
         });
+    },
+
+    initBoards: function (board, boardsDiv) {
+         let htmlForBoard = htmlStrings.initBoard(board);
+            boardsDiv.insertAdjacentHTML("beforeend", htmlForBoard);
+
+            let boardDiv = document.getElementById("board" + board.id);
+            let htmlForDetail = htmlStrings.initDetails(board);
+            boardDiv.insertAdjacentHTML("beforeend", htmlForDetail);
+
+            let statuses = dataHandler.getStatuses();
+            for(let status of statuses){
+                let boardDivDetail = document.getElementById("boarddetail" + board.id);
+                let htmlForStatus = htmlStrings.initStatusCard(status, board);
+                boardDivDetail.insertAdjacentHTML("beforeend", htmlForStatus);
+                if(status.name === "New") {
+                    let newStatusDiv = document.getElementById("statusNew" + board.id + "span");
+                    newStatusDiv.insertAdjacentHTML("beforeend", htmlStrings.initNewCardButton(board));
+                }
+
+                let cards = dataHandler.getCardsByBoardId(board.id);
+                let boardDivDetailContainer = document.getElementById("board" + board.id + "-" + status.name);
+                for(let card of cards){
+                    if(card.status_id === status.id){
+                        let htmlForCard = htmlStrings.initCard(card);
+                        boardDivDetailContainer.insertAdjacentHTML("beforeend", htmlForCard);
+                    }
+                }
+            }
+
+            let cardContainerListForBoard = [];
+            let dragulaContainersForBoard = document.getElementsByClassName('dragula-container');
+            for (let container of dragulaContainersForBoard) {
+                if (Number(container.dataset.board) === board.id){
+                    cardContainerListForBoard.push(container)
+                }
+            }
+            let drake = drag.addDragNDrop(cardContainerListForBoard);
+            dom.handleCardDrop(drake);
+    },
+
+    addEventlistenerToSingleBoard: function (boardid) {
+
+        detailForBoard = document.getElementById("boardspan" + boardid);
+        detailForBoard.addEventListener("click", function () {
+            let boardDetail = document.getElementById("boarddetail" + boardid);
+            if (boardDetail.hasAttribute("hidden")) {
+                boardDetail.removeAttribute("hidden");
+            } else {
+                boardDetail.setAttribute("hidden", true)
+            }
+
+            let newCardButtonId = document.getElementById("newboardcard" + boardid);
+            newCardButtonId.removeAttribute("hidden");
+
+            newCardButtonId.addEventListener("click", function () {
+                newCardButtonId.setAttribute("hidden", true);
+                let saveButtonForNewCard = document.getElementById("add-card-button" + boardid);
+                let textBoxForNewCard = document.getElementById("add-card-input" + boardid);
+                let cancelButtonForNewCard = document.getElementById("add-card-cancel" + boardid);
+                if (saveButtonForNewCard.hasAttribute("hidden") && textBoxForNewCard.hasAttribute("hidden")
+                    && cancelButtonForNewCard.hasAttribute("hidden")) {
+                    saveButtonForNewCard.removeAttribute("hidden");
+                    textBoxForNewCard.removeAttribute("hidden");
+                    cancelButtonForNewCard.removeAttribute("hidden")
+                } else {
+                    saveButtonForNewCard.setAttribute("hidden", true);
+                    textBoxForNewCard.setAttribute("hidden", true);
+                    cancelButtonForNewCard.setAttribute("hidden", true)
+
+                }
+
+                saveButtonForNewCard.addEventListener("click", function () {
+                    let newCardTitleGiven = textBoxForNewCard.value;
+                    if (newCardTitleGiven.length !== 0) {
+                        let newCard = dataHandler.createNewCard(newCardTitleGiven, detailButtonId.replace("boardspan", ""), 1);
+                        let boardDivDetailContainer = document.getElementById("board" + newCard.board_id + "-New");
+                        boardDivDetailContainer.insertAdjacentHTML("beforeend", htmlStrings.initCard(newCard));
+                        saveButtonForNewCard.setAttribute("hidden", true);
+                        textBoxForNewCard.setAttribute("hidden", true);
+                        cancelButtonForNewCard.setAttribute("hidden", true);
+                        newCardButtonId.removeAttribute("hidden");
+                    }
+                }, false);
+
+                cancelButtonForNewCard.addEventListener("click", function () {
+                    saveButtonForNewCard.setAttribute("hidden", true);
+                    textBoxForNewCard.setAttribute("hidden", true);
+                    cancelButtonForNewCard.setAttribute("hidden", true);
+                    newCardButtonId.removeAttribute("hidden");
+                })
+            })
+        })
+    },
+
+
+    addEventlistenerToSingleCard: function (cardid) {
+        let editableCards = document.getElementsByClassName("fas fa-edit");
+        for(let editableCard of editableCards){
+            editableCard.addEventListener("click", dom.handleClickOnEditCardTitle)
+        }
     }
+
+
 };
