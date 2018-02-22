@@ -1,7 +1,6 @@
 // It uses data_handler.js to visualize elements
 dom = {
     loadBoards: function() {
-        dataHandler.init();
         dataHandler.sortCardsInBoardsByOrder();
         dataHandler.sortCardsInBoardsByStatus();
         dataHandler.getBoards(dom.showBoards);
@@ -110,12 +109,12 @@ dom = {
             let cancelSavingNewBoardButton = document.getElementById("cancel_saving_new_board_button");
             cancelSavingNewBoardButton.setAttribute("hidden", true);
 
-            board = dataHandler.createNewBoard(newBoardTitle);
+            let board = dataHandler.createNewBoard(newBoardTitle);
 
-            boardsDiv = document.getElementById("boards");
+            let boardsDiv = document.getElementById("boards");
             dom.initBoards(board, boardsDiv);
             dom.addEventListenerToEditSingleBoardTitle(board.id);
-            dom.addEventlistenerToSingleBoard(board.id)
+            dom.addEventlistenerToSingleBoard(board.id);
             dom.addEventlistenerToSaveNewCard(board.id)
 
 
@@ -381,7 +380,7 @@ dom = {
 
     addEventlistenerToSingleBoard: function (boardid) {
 
-        detailForBoard = document.getElementById("boardspan" + boardid);
+        let detailForBoard = document.getElementById("boardspan" + boardid);
         detailForBoard.addEventListener("click", function () {
             let boardDetail = document.getElementById("boarddetail" + boardid);
             if (boardDetail.hasAttribute("hidden")) {
