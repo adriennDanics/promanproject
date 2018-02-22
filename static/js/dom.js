@@ -204,7 +204,7 @@ dom = {
 
     handleClickOnEditBoardTitle: function () {
         let boardElementID = this.parentElement.getAttribute("id");
-        let boardID = Number(boardElementID.replace("board", ""));
+        let boardID = Number(boardElementID.replace("board_button_span", ""));
 
         let inputField = document.getElementById("edit-input-field" + boardID);
         let saveButton = document.getElementById("edit-input-button" + boardID);

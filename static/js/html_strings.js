@@ -2,7 +2,7 @@ htmlStrings = {
     initBoard: function (board) {
         return `<div class="row card bg-light container" id="board${board.id}">
                     <span class="boards" id="boardspan${board.id}">${board.title}</span>
-                    <span>
+                    <span id="board_button_span${board.id}">
                         <button type="button" class="titleEditButton" id="edit${board.id}">
                             <i class="far fa-edit"></i>
                         </button> 
