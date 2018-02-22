@@ -17,11 +17,11 @@ body{
     color: palegoldenrod;
 }
 .far {
-    margin-left: 98%;
+
     width: 16px;
 }
 
-.card.bg-light, .card.bg-info {
+.card.bg-light, .card.bg-info, card.bg-dark {
     background-color: #051f10 !important;
     margin: 40px 40px 10px 10px;
     box-shadow: 10px 10px 8px #4caf50;
@@ -36,7 +36,7 @@ body{
 }
 
 .btn{
-    background-color: #880c19;
+    background-color: #051f10;
 }
 .btn-outline-info, #new_board_box {
     background-color: #d4d5d7;
@@ -51,12 +51,28 @@ h1 {
     color: #880c19;
 }
 
-#new_board_box.card {
+h4, h5, label, .logoutlink {
+    padding: 10px 10px 10px 2px;
+    font-family:'IM Fell English', serif;
+    text-shadow: 2px 2px #051f10;
+    color: white;
+}
+
+.far.fa-edit, .far.fa-edit.dark{
+
+}
+
+h5.alert {
+    color: #051f10;
+}
+
+#new_board_box.card, #new_board_box.card.dark {
     position: absolute;
     top: 50px;
-    right: 60px;
+    right: 50px;
     text-align: right;
     align-self: right;
+    padding: 5px;
     width: 80px;
 }
 
