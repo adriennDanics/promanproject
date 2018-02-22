@@ -8,6 +8,8 @@ app.secret_key = 'IMightJustTakeAShortWalkOfALongPier01'
 
 @app.route("/")
 def boards():
+    if 'message'in session:
+        session.pop('message')
     return render_template('boards.html')
 
 
