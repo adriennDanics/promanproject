@@ -34,7 +34,7 @@ htmlStrings = {
     initNewCardButton: function (board) {
         return `
                 <i class="fas fa-plus" id="newboardcard${board.id}" hidden="true"></i>
-                <input class="form-control" id="add-card-input${board.id}" placeholder="New Card" type="text" minlength="1" hidden>
+                <input class="form-control" id="add-card-input${board.id}" placeholder="New Card" type="text" hidden>
                 <button class="btn" id="add-card-button${board.id}" hidden>Save</button>
                 <button class="btn" id="add-card-cancel${board.id}" hidden>Cancel</button>
                 `
