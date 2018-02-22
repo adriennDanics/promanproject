@@ -6,27 +6,80 @@
 dataHandler = {
     keyInLocalStorage: 'proman-data', // the string that you use as a key in localStorage to save your application data
     _data: {}, // it contains the boards and their cards and statuses. It is not called from outside.
-    _loadData: function() {
+    _theme:{},
+    _loadData: function(callback) {
         // it is not called from outside
         // loads data from local storage, parses it and put into this._data property
-        this._data = JSON.parse(localStorage.getItem(this.keyInLocalStorage));
+        $.ajax({
+            dataType: "json",
+            url: "http://127.0.0.1:5000/data" ,
+            method: 'GET',
+            success: function(response) {
+                debugger;
+                if(response.user_id){
+                    dataHandler._data = response;
+                    callback();
+                } else if(response.message) {
+                    let message = response.message;
+                    dom.loginScreen(message);
+                } else {
+                    dom.loginScreen();
+                }
+            }
+        });
+        dataHandler._theme = JSON.parse(localStorage.getItem("theme"));
     },
-    _saveData: function() {
+    _saveData: function(whatToUpdateOrAdd, dataToSave) {
         // it is not called from outside
-        // saves the data from this._data to local storage
-        localStorage.setItem(this.keyInLocalStorage, JSON.stringify(this._data));
+        // whatToUpdateOrAdd parameter: board/card/etc.
+        // dataToSave parameter: piece of data specifically to be updated
+        if(dataToSave === "theme"){
+           localStorage.setItem("theme", JSON.stringify(dataHandler._theme));
+        } else if (whatToUpdateOrAdd === "boards") {
+            let dataToPost = {"table": whatToUpdateOrAdd, "data": dataToSave};
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:5000/data_new",
+                data: JSON.stringify(dataToPost),
+                async: false,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success:location.reload()
+                });
+        } else {
+            let dataToPost = {"table": whatToUpdateOrAdd, "data": dataToSave};
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:5000/data_new",
+                data: JSON.stringify(dataToPost),
+                async: false,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json'
+            })
+        }
+    },
+    _loginUser: function(dataToSave, callback) {
+        debugger;
+        $.ajax({
+            type: "POST",
+            url: "http://127.0.0.1:5000/session",
+            data: JSON.stringify(dataToSave),
+            contentType: "application/json; charset=utf-8",
+            dataType: 'json',
+            success: location.reload()
+            })
     },
     init: function() {
-        this._loadData();
+        dataHandler._loadData();
     },
     getBoards: function(callback) {
         // the boards are retrieved and then the callback function is called with the boards
-        let boards = this._data.boards;
+        let boards = dataHandler._data.boards;
         callback(boards);
     },
     getBoard: function(boardId) {
          //the board is retrieved and then the callback function is called with the boar
-        let boards = this._data.boards;
+        let boards = dataHandler._data.boards;
         let board;
         for (let i = 0; i < boards.length; i++) {
             if (boards[i].id === boardId) {
@@ -37,7 +90,7 @@ dataHandler = {
     },
     getStatuses: function(callback = "default") {
         // the statuses are retrieved and then the callback function is called with the statuses
-        let statuses = this._data.statuses;
+        let statuses = dataHandler._data.statuses;
         if ( callback === "default") {
             return statuses;
         } else {
@@ -46,7 +99,7 @@ dataHandler = {
     },
     getStatusIDByName: function(statusName, callback="default") {
         // the status is retrieved and then the callback function is called with the status
-        let statuses = this._data.statuses;
+        let statuses = dataHandler._data.statuses;
         let status;
         for (let i = 0; i < statuses.length; i++) {
             if (statuses[i].name === statusName) {
@@ -62,7 +115,7 @@ dataHandler = {
 
     getCardsByBoardId: function(boardId, callback="default") {
         // the cards are retrieved and then the callback function is called with the cards
-        let cards = this._data.cards;
+        let cards = dataHandler._data.cards;
         let cardsByBoardId = [];
         for (let i = 0; i < cards.length; i++) {
             if (cards[i].board_id === boardId) {
@@ -77,7 +130,7 @@ dataHandler = {
     },
     getCard: function(cardId, callback="default") {
         // the card is retrieved and then the callback function is called with the card
-        let cards = this._data.cards;
+        let cards = dataHandler._data.cards;
         let card;
         for (let i = 0; i < cards.length; i++) {
             if (cards[i].id === cardId) {
@@ -94,75 +147,66 @@ dataHandler = {
 
         }
     },
+
     createNewBoard: function(boardTitle) {
         // creates new board, saves it and calls the callback function with its data
-        let existingBoardIDs = [];
-        for (let i = 0; i < this._data.boards.length; i++) {
-            existingBoardIDs.push(this._data.boards[i].id);
-        }
-        let newBoardID = Math.max(...existingBoardIDs) + 1;
         let newBoard = {
-            "id": newBoardID,
             "title": boardTitle,
-            "is_active": true
+            "user_id": dataHandler._data.user_id
         };
-        this._data.boards.push(newBoard);
-        this._saveData();
-        return newBoard
+        dataHandler._data.boards.push(newBoard);
+        dataHandler._saveData('boards',newBoard);
     },
+
     createNewCard: function(cardTitle, boardId, statusId) {
         // creates new card, saves it and calls the callback function with its data
-        let existingCardIDs = [];
-        for (let i = 0; i < this._data.cards.length; i++) {
-            existingCardIDs.push(this._data.cards[i].id);
-        }
-        let newCardID = Math.max(...existingCardIDs) + 1;
-        let cardsForThisBoard = this.getCardsByBoardId(Number(boardId));
+        let cardsForThisBoard = dataHandler.getCardsByBoardId(Number(boardId));
         let orderForThisBoard = [];
         for (let i = 0; i < cardsForThisBoard.length; i++) {
             if (cardsForThisBoard[i].status_id === 1) {
-                orderForThisBoard.push(cardsForThisBoard[i].order);
+                orderForThisBoard.push(cardsForThisBoard[i].order_num);
             }
         }
-
-        let newCardOrder = Math.max(...orderForThisBoard) + 1;
+        if(orderForThisBoard.length) {
+            var newCardOrder = Math.max(...orderForThisBoard) + 1;
+        } else {
+            var newCardOrder = 1;
+        }
         let newCard = {
-            "id": newCardID,
             "title": cardTitle,
             "board_id": Number(boardId),
             "status_id": statusId,
-            "order": Number(newCardOrder)
+            "order_num": Number(newCardOrder)
         };
-        this._data.cards.push(newCard);
-        this._saveData();
-        return newCard
+        dataHandler._data.cards.push(newCard);
+        dataHandler._saveData("cards", newCard);
     },
 
     editBoardTitle: function(newTitle, boardID) {
-        let board = this.getBoard(boardID);
+        let board = dataHandler.getBoard(boardID);
         board.title=newTitle;
-        this._saveData();
+        dataHandler._saveData("boards", board);
     },
     getTheme: function (callback) {
-        callback(this._data.theme);
+        callback(dataHandler._theme);
     },
     setTheme: function (theme) {
-        this._data.theme = theme;
-        this._saveData();
+        dataHandler._theme = theme;
+        dataHandler._saveData("theme", "theme");
     },
     // here comes more features
 
     editCardTitle: function (newTitle, cardID) {
-        let card = this.getCard(cardID);
+        let card = dataHandler.getCard(cardID);
         card.title = newTitle;
-        this._saveData();
+        dataHandler._saveData("cards", card);
 
     },
 
     sortCardsInBoardsByOrder: function () {
         let allCardsInAllBoards = dataHandler._data.cards;
         allCardsInAllBoards.sort(function (a, b) {
-            return a.order - b.order
+            return a.order_num - b.order_num
         });
     },
 

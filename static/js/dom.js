@@ -21,6 +21,11 @@ dom = {
         // shows boards appending them to #boards div
         // it adds necessary event listeners also
         let numberOfBoards = boards.length;
+        let logOutDiv = document.getElementById("logout");
+        logOutDiv.innerHTML = "";
+
+        let logOutLink = htmlStrings.initLogOutLink(dataHandler._data.user_name);
+        logOutDiv.insertAdjacentHTML("beforeend", logOutLink);
 
         let boardsDiv = document.getElementById("boards");
 
@@ -192,7 +197,7 @@ dom = {
                 }
 
 
-                    
+
                 }, false)
         }
     },
@@ -282,7 +287,7 @@ dom = {
             let orderForThisBoardAndDroppedToStatus = [];
             for (let cardForThisBoard of cardsForThisBoard) {
                 if (cardForThisBoard.status_id === status.id) {
-                    orderForThisBoardAndDroppedToStatus.push(cardForThisBoard.order);
+                    orderForThisBoardAndDroppedToStatus.push(cardForThisBoard.order_num);
                 }
             }
 
@@ -291,26 +296,26 @@ dom = {
             if (sibling === null) {
 
                 if (orderForThisBoardAndDroppedToStatus.length > 0) {
-                    card.order = maxOrderForThisBoardAndStatus + 1;
+                    card.order_num = maxOrderForThisBoardAndStatus + 1;
                 } else {
-                    card.order = 1;
+                    card.order_num = 1;
                 }
             } else {
                 let droppedBeforeCardId = Number(sibling.id.replace("card", ""));
                 let droppedBeforeCard = dataHandler.getCard(droppedBeforeCardId);
-                if (droppedBeforeCard.order === 1) {
+                if (droppedBeforeCard.order_num === 1) {
                     for (let cardForThisBoard of cardsForThisBoard) {
                         if (cardForThisBoard.status_id === status.id && cardForThisBoard.id !== card.id) {
-                            cardForThisBoard.order++;
+                            cardForThisBoard.order_num++;
                         }
                     }
-                    card.order = 1;
+                    card.order_num = 1;
                 } else {
-                    card.order = droppedBeforeCard.order;
+                    card.order_num = droppedBeforeCard.order_num;
                     for (let cardForThisBoard of cardsForThisBoard) {
                         if (cardForThisBoard.status_id === status.id && cardForThisBoard.id !== card.id) {
-                            if (cardForThisBoard.order >= card.order) {
-                                cardForThisBoard.order++;
+                            if (cardForThisBoard.order_num >= card.order_num) {
+                                cardForThisBoard.order_num++;
                             }
 
                         }
@@ -325,12 +330,12 @@ dom = {
                 for (let draggedFromCard of draggedFromCards) {
                     cardId = Number(draggedFromCard.id.replace("card", ""));
                     let oldCard = dataHandler.getCard(cardId);
-                    oldCard.order ++;
+                    oldCard.order_num ++;
                 }
             }
 
             card.status_id = status.id;
-            dataHandler._saveData();
+            dataHandler._saveData("cards", card);
         });
     },
 
@@ -402,5 +407,23 @@ dom = {
 
     },
 
+    loginScreen: function (message) {
+        let boardsDiv = document.getElementById("boards");
+        boardsDiv.innerHTML = "";
 
+        if (message){
+            let messageContent = document.getElementById("logout-message");
+            debugger;
+            messageContent.innerHTML = message;
+        }
+
+        let htmlForLogin = htmlStrings.initLoginScreen();
+        boardsDiv.insertAdjacentHTML("beforeend", htmlForLogin);
+
+        document.getElementById("login_button").addEventListener("click", function(){
+            let userToLogIn = document.getElementById("user_name").value;
+            let passwordToLogIn = document.getElementById("password").value;
+            dataHandler._loginUser({'user':userToLogIn, 'password':passwordToLogIn})
+        })
+    }
 };
