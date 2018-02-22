@@ -17,7 +17,7 @@ body{
     color: palegoldenrod;
 }
 .far {
-    margin-left: 98%;
+
     width: 16px;
 }
 
@@ -55,6 +55,11 @@ h4, h5, label, .logoutlink {
     padding: 10px 10px 10px 2px;
     font-family:'IM Fell English', serif;
     text-shadow: 2px 2px #051f10;
+    color: white;
+}
+
+.far.fa-edit, .far.fa-edit.dark{
+
 }
 
 h5.alert {
