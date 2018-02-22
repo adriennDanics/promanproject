@@ -111,6 +111,7 @@ dom = {
             dom.initBoards(board, boardsDiv);
             dom.addEventListenerToEditSingleBoardTitle(board.id);
             dom.addEventlistenerToSingleBoard(board.id)
+            dom.addEventlistenerToSaveNewCard(board.id)
 
 
 
@@ -123,19 +124,16 @@ dom = {
 
         newCardButtonId.addEventListener("click", function () {
             newCardButtonId.setAttribute("hidden", true);
+
             let saveButtonForNewCard = document.getElementById("add-card-button" + boardid);
             let textBoxForNewCard = document.getElementById("add-card-input" + boardid);
             let cancelButtonForNewCard = document.getElementById("add-card-cancel" + boardid);
+
             if(saveButtonForNewCard.hasAttribute("hidden") && textBoxForNewCard.hasAttribute("hidden")
                                                             && cancelButtonForNewCard.hasAttribute("hidden")) {
                 saveButtonForNewCard.removeAttribute("hidden");
                 textBoxForNewCard.removeAttribute("hidden");
                 cancelButtonForNewCard.removeAttribute("hidden")
-            } else {
-                saveButtonForNewCard.setAttribute("hidden", true);
-                textBoxForNewCard.setAttribute("hidden", true);
-                cancelButtonForNewCard.setAttribute("hidden", true)
-
             }
 
             saveButtonForNewCard.addEventListener("click", function (){
@@ -387,7 +385,6 @@ dom = {
                 boardDetail.setAttribute("hidden", true)
             }
 
-            dom.addEventlistenerToSaveNewCard(boardid);
 
         })
     },
