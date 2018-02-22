@@ -413,7 +413,6 @@ dom = {
 
     loginScreen: function (message) {
         let boardsDiv = document.getElementById("boards");
-        boardsDiv.classList.remove("loader");
         boardsDiv.innerHTML = "";
 
         if (message){
@@ -429,7 +428,6 @@ dom = {
             let userToLogIn = document.getElementById("user_name").value;
             let passwordToLogIn = document.getElementById("password").value;
             boardsDiv.innerHTML="";
-            boardsDiv.classList.add("loader");
             dataHandler._loginUser({'user':userToLogIn, 'password':passwordToLogIn})
         })
     },
