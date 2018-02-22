@@ -73,8 +73,9 @@ def data_received():
 @app.route('/logout')
 def logout():
     session.pop('user_id')
-    session.pop('message')
     session.pop('user_name')
+    if 'message'in session:
+        session.pop('message')
     return redirect('/')
 
 
