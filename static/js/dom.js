@@ -7,6 +7,7 @@ dom = {
         dataHandler.getTheme(themes.themeHandler);
         dom.addEventListenerToNewBoardIcon();
         dom.addEventListenerToSaveNewBoardButton();
+        dom.addEventListenerToCancelSavingNewBoardButton();
         dom.addEventListenerToBoardDetailButton();
         dom.addEventListenerToCloseBoardDetailButton();
         dom.addEventListenerToEditCardTitle();
@@ -26,11 +27,319 @@ dom = {
         logOutDiv.insertAdjacentHTML("beforeend", logOutLink);
 
         let boardsDiv = document.getElementById("boards");
-        boardsDiv.innerHTML = "";
 
         for (let board of boards) {
+            dom.initBoards(board, boardsDiv)
 
-            let htmlForBoard = htmlStrings.initBoard(board);
+        }
+    },
+
+    loadCards: function(boardId) {
+        // retrieves cards and makes showCards called
+    },
+    showCards: function(cards) {
+        // shows the cards of a board
+        // it adds necessary event listeners also
+    },
+    // here comes more features
+    addEventListenerToNewBoardIcon: function () {
+        let new_board_icon = document.getElementById("new_board_clickable_area");
+        new_board_icon.addEventListener("click", dom.handleClickOnNewBoardIcon)
+    },
+
+    addEventListenerToSaveNewBoardButton: function () {
+        let save_new_board_butt = document.getElementById("save_new_board_button");
+        save_new_board_butt.addEventListener("click", dom.handleClickOnSaveNewBoardButton)
+    },
+
+    addEventListenerToCancelSavingNewBoardButton: function () {
+        let cancel_button = document.getElementById("cancel_saving_new_board_button");
+        cancel_button.addEventListener("click", dom.handleClickOnCancelSavingNewBoardButton)
+    },
+
+    addEventListenerToEditBoardTitle: function () {
+        let editableBoards = document.getElementsByClassName("titleEditButton");
+        for(let editableBoard of editableBoards){
+            editableBoard.addEventListener("click", dom.handleClickOnEditBoardTitle)
+        }
+    },
+
+    addEventListenerToEditCardTitle: function () {
+        let editableCards = document.getElementsByClassName("fas fa-edit");
+        for(let editableCard of editableCards){
+            editableCard.addEventListener("click", dom.handleClickOnEditCardTitle)
+        }
+
+    },
+
+    addEventlistenerToSaveNewCard: function (boardid) {
+        let addNewCardButton = document.getElementById("newboardcard" + boardid);
+        addNewCardButton.addEventListener("click", dom.handleClickOnNewCardIcon(boardid))
+    },
+
+    handleClickOnNewBoardIcon: function () {
+        document.getElementById("new_board_input_field").value = "";
+
+        let newBoardText = document.getElementById("new_board_text");
+        newBoardText.setAttribute("hidden", true);
+
+        let newBoardInput = document.getElementById("new_board_input_field");
+        newBoardInput.removeAttribute("hidden");
+
+        let saveNewBoardButton = document.getElementById("save_new_board_button");
+        saveNewBoardButton.removeAttribute("hidden");
+
+        let cancelSavingNewBoardButton = document.getElementById("cancel_saving_new_board_button");
+        cancelSavingNewBoardButton.removeAttribute("hidden");
+    },
+
+    handleClickOnSaveNewBoardButton: function () {
+        let newBoardTitle = document.getElementById("new_board_input_field").value;
+
+        if (newBoardTitle.length > 0) {
+            let newBoardText = document.getElementById("new_board_text");
+            newBoardText.removeAttribute("hidden");
+
+            let newBoardInput = document.getElementById("new_board_input_field");
+            newBoardInput.setAttribute("hidden", true);
+
+            let saveNewBoardButton = document.getElementById("save_new_board_button");
+            saveNewBoardButton.setAttribute("hidden", true);
+
+            let cancelSavingNewBoardButton = document.getElementById("cancel_saving_new_board_button");
+            cancelSavingNewBoardButton.setAttribute("hidden", true);
+
+            let board = dataHandler.createNewBoard(newBoardTitle);
+
+            let boardsDiv = document.getElementById("boards");
+            dom.initBoards(board, boardsDiv);
+            dom.addEventListenerToEditSingleBoardTitle(board.id);
+            dom.addEventlistenerToSingleBoard(board.id);
+            dom.addEventlistenerToSaveNewCard(board.id)
+
+
+
+        }
+
+    },
+    handleClickOnNewCardIcon: function (boardid) {
+        let newCardButtonId = document.getElementById("newboardcard" + boardid);
+        newCardButtonId.removeAttribute("hidden");
+
+        newCardButtonId.addEventListener("click", function () {
+            newCardButtonId.setAttribute("hidden", true);
+
+            let saveButtonForNewCard = document.getElementById("add-card-button" + boardid);
+            let textBoxForNewCard = document.getElementById("add-card-input" + boardid);
+            let cancelButtonForNewCard = document.getElementById("add-card-cancel" + boardid);
+
+            if(saveButtonForNewCard.hasAttribute("hidden") && textBoxForNewCard.hasAttribute("hidden")
+                                                            && cancelButtonForNewCard.hasAttribute("hidden")) {
+                saveButtonForNewCard.removeAttribute("hidden");
+                textBoxForNewCard.removeAttribute("hidden");
+                cancelButtonForNewCard.removeAttribute("hidden")
+            }
+
+            saveButtonForNewCard.addEventListener("click", function (){
+                let newCardTitleGiven = textBoxForNewCard.value;
+                if(newCardTitleGiven.length !== 0) {
+                    let newCard = dataHandler.createNewCard(newCardTitleGiven, boardid, 1);
+                    let boardDivDetailContainer = document.getElementById("board" + boardid + "-New");
+                    boardDivDetailContainer.insertAdjacentHTML("beforeend", htmlStrings.initCard(newCard));
+                    dom.addEventlistenerToSingleCard(newCard.id);
+                    textBoxForNewCard.value = "";
+                    saveButtonForNewCard.setAttribute("hidden", true);
+                    textBoxForNewCard.setAttribute("hidden", true);
+                    cancelButtonForNewCard.setAttribute("hidden", true);
+                    newCardButtonId.removeAttribute("hidden");
+
+                }
+            }, false);
+
+            cancelButtonForNewCard.addEventListener("click", function () {
+                textBoxForNewCard.value = "";
+                saveButtonForNewCard.setAttribute("hidden", true);
+                textBoxForNewCard.setAttribute("hidden", true);
+                cancelButtonForNewCard.setAttribute("hidden", true);
+                newCardButtonId.removeAttribute("hidden");
+            })
+        })
+    },
+
+    handleClickOnCancelSavingNewBoardButton: function () {
+        let newBoardText = document.getElementById("new_board_text");
+        newBoardText.removeAttribute("hidden");
+
+        let newBoardInput = document.getElementById("new_board_input_field");
+        newBoardInput.setAttribute("hidden", true);
+
+        let saveNewBoardButton = document.getElementById("save_new_board_button");
+        saveNewBoardButton.setAttribute("hidden", true);
+
+        let cancelSavingNewBoardButton = document.getElementById("cancel_saving_new_board_button");
+        cancelSavingNewBoardButton.setAttribute("hidden", true);
+    },
+
+    addEventListenerToBoardDetailButton: function () {
+        let detailForBoards = document.getElementsByClassName("boards");
+
+        for (let detailForBoard of detailForBoards) {
+
+            detailForBoard.addEventListener("click", function () {
+
+                let detailButtonId = detailForBoard.id;
+                let boardDetail = document.getElementById("boarddetail" + detailButtonId.replace("boardspan",""));
+                if(boardDetail.hasAttribute("hidden")) {
+                    boardDetail.removeAttribute("hidden");
+                } else {
+                    boardDetail.setAttribute("hidden", true)
+                }
+
+
+
+                }, false)
+        }
+    },
+
+    handleClickOnEditBoardTitle: function () {
+        let boardElementID = this.parentElement.getAttribute("id");
+        let boardID = Number(boardElementID.replace("board", ""));
+
+        let inputField = document.getElementById("edit-input-field" + boardID);
+        let saveButton = document.getElementById("edit-input-button" + boardID);
+
+        if(inputField.hasAttribute("hidden") && saveButton.hasAttribute("hidden")) {
+            inputField.removeAttribute("hidden");
+            saveButton.removeAttribute("hidden");
+        } else {
+            inputField.setAttribute("hidden", true);
+            saveButton.setAttribute("hidden", true);
+        }
+
+        saveButton.addEventListener("click", function() {
+            let newBoardTitle = document.getElementById("edit-input-field"+boardID).value;
+            if (newBoardTitle.length > 0) {
+                dataHandler.editBoardTitle(newBoardTitle, boardID);
+                document.getElementById("boardspan" + boardID).innerText = newBoardTitle;
+                inputField.setAttribute("hidden", true);
+                saveButton.setAttribute("hidden", true);
+            }
+        });
+    },
+
+    addEventListenerToCloseBoardDetailButton: function () {
+        let closeDetailButtons = document.getElementsByClassName("fas fa-angle-up");
+        for (let closeDetailButton of closeDetailButtons) {
+            closeDetailButton.addEventListener("click", function () {
+                let closeDetailButtonId = closeDetailButton.id;
+                document.getElementById(closeDetailButtonId).setAttribute("hidden", true);
+
+                let DetailButton = document.getElementById("detail" + closeDetailButtonId.replace("closedetail",""));
+                DetailButton.removeAttribute("hidden");
+
+                let boardDetail = document.getElementById("boarddetail" + closeDetailButtonId.replace("closedetail",""));
+                boardDetail.setAttribute("hidden", true);
+
+                let newCardButtonId = document.getElementById("newboardcard" + closeDetailButtonId.replace("closedetail",""));
+                newCardButtonId.setAttribute("hidden", true);
+            });
+        }
+    },
+
+    handleClickOnEditCardTitle: function () {
+        let cardElementID = this.parentElement.getAttribute("id");
+        let cardID = Number(cardElementID.replace("card", ""));
+
+        let inputField = document.getElementById("edit-card-input" + cardID);
+        let saveButton = document.getElementById("edit-card-button" + cardID);
+
+        if(inputField.hasAttribute("hidden") && saveButton.hasAttribute("hidden")) {
+            inputField.removeAttribute("hidden");
+            saveButton.removeAttribute("hidden");
+        } else {
+            inputField.setAttribute("hidden", true);
+            saveButton.setAttribute("hidden", true);
+        }
+
+        saveButton.addEventListener("click", function () {
+            let newCardTitle = document.getElementById("edit-card-input"+cardID).value;
+
+            if (newCardTitle.length > 0) {
+                dataHandler.editCardTitle(newCardTitle, cardID);
+                document.getElementById("cardTitle" + cardID).innerText = newCardTitle;
+                inputField.setAttribute("hidden", "hidden");
+                saveButton.setAttribute("hidden", "hidden");
+            }
+
+        });
+    },
+
+    handleCardDrop: function (drake) {
+        drake.on('drop', function(el, target, source, sibling) {
+            let cardId = Number(el.id.replace("card", ""));
+            let card = dataHandler.getCard(cardId);
+            let statusName = target.dataset.status;
+            let status = dataHandler.getStatusIDByName(statusName);
+
+            let boardId = card.board_id;
+            let cardsForThisBoard = dataHandler.getCardsByBoardId(boardId);
+            let orderForThisBoardAndDroppedToStatus = [];
+            for (let cardForThisBoard of cardsForThisBoard) {
+                if (cardForThisBoard.status_id === status.id) {
+                    orderForThisBoardAndDroppedToStatus.push(cardForThisBoard.order_num);
+                }
+            }
+
+            let maxOrderForThisBoardAndStatus = Math.max(...orderForThisBoardAndDroppedToStatus);
+
+            if (sibling === null) {
+
+                if (orderForThisBoardAndDroppedToStatus.length > 0) {
+                    card.order_num = maxOrderForThisBoardAndStatus + 1;
+                } else {
+                    card.order_num = 1;
+                }
+            } else {
+                let droppedBeforeCardId = Number(sibling.id.replace("card", ""));
+                let droppedBeforeCard = dataHandler.getCard(droppedBeforeCardId);
+                if (droppedBeforeCard.order_num === 1) {
+                    for (let cardForThisBoard of cardsForThisBoard) {
+                        if (cardForThisBoard.status_id === status.id && cardForThisBoard.id !== card.id) {
+                            cardForThisBoard.order_num++;
+                        }
+                    }
+                    card.order_num = 1;
+                } else {
+                    card.order_num = droppedBeforeCard.order_num;
+                    for (let cardForThisBoard of cardsForThisBoard) {
+                        if (cardForThisBoard.status_id === status.id && cardForThisBoard.id !== card.id) {
+                            if (cardForThisBoard.order_num >= card.order_num) {
+                                cardForThisBoard.order_num++;
+                            }
+
+                        }
+                    }
+                }
+            }
+
+            let draggedFrom = source;
+            let draggedFromCards = draggedFrom.getElementsByClassName("card new");
+
+            if (draggedFromCards.length > 0) {
+                for (let draggedFromCard of draggedFromCards) {
+                    cardId = Number(draggedFromCard.id.replace("card", ""));
+                    let oldCard = dataHandler.getCard(cardId);
+                    oldCard.order_num ++;
+                }
+            }
+
+            card.status_id = status.id;
+            dataHandler._saveData("cards", card);
+        });
+    },
+
+    initBoards: function (board, boardsDiv) {
+         let htmlForBoard = htmlStrings.initBoard(board);
             boardsDiv.insertAdjacentHTML("beforeend", htmlForBoard);
 
             let boardDiv = document.getElementById("board" + board.id);
@@ -66,315 +375,35 @@ dom = {
             }
             let drake = drag.addDragNDrop(cardContainerListForBoard);
             dom.handleCardDrop(drake);
-        }
+            dom.addEventlistenerToSaveNewCard(board.id)
     },
 
-        /*for(let i=0; i<numberOfBoards; i++){
-            let newDivForBoard = document.createElement("div");
-            newDivForBoard.innerHTML = boards[i].title;
-            newDivForBoard.classList.add("row", "card", "bg-light", "container");
-            newDivForBoard.setAttribute("id", "board"+boards[i].id);
-            boardsDiv.appendChild(newDivForBoard);
+    addEventlistenerToSingleBoard: function (boardid) {
 
-            let detailButton = document.createElement("i");
-            detailButton.classList.add("fas", "fa-angle-down");
-            detailButton.setAttribute("id", "detail"+boards[i].id);
-            newDivForBoard.appendChild(detailButton);
-
-            let closeDetailButton = document.createElement("i");
-            closeDetailButton.classList.add("fas", "fa-angle-up");
-            closeDetailButton.setAttribute("id", "closedetail"+boards[i].id);
-            closeDetailButton.setAttribute("hidden", true);
-            newDivForBoard.appendChild(closeDetailButton);
-
-            let editButton = document.createElement("i");
-            editButton.classList.add("far", "fa-edit");
-            editButton.setAttribute("id", "edit"+boards[i].id);
-            newDivForBoard.appendChild(editButton);
-
-            let newDivForBoardDetails = document.createElement("div");
-            newDivForBoardDetails.classList.add("row", "bg-info");
-            newDivForBoardDetails.setAttribute("id", "boarddetail" + boards[i].id);
-            newDivForBoardDetails.setAttribute("hidden", true);
-            newDivForBoard.appendChild(newDivForBoardDetails);
-
-            let newButtonForAddCard = document.createElement("button");
-            newButtonForAddCard.classList.add("fas", "fa-plus", "card");
-            newButtonForAddCard.setAttribute("id", "newboardcard" + boards[i].id);
-            newButtonForAddCard.setAttribute("hidden", true);
-            newDivForBoard.appendChild(newButtonForAddCard);
-
-            let statuses = dataHandler.getStatuses();
-            for (let j = 0; j < statuses.length; j++) {
-                let newStatusColumn = document.createElement("div");
-                newStatusColumn.classList.add("col", "bg-secondary");
-                newDivForBoardDetails.appendChild(newStatusColumn);
-
-                let newDivForCardsContainer = document.createElement("div");
-                newDivForCardsContainer.classList.add("dragula-container");
-                newDivForCardsContainer.setAttribute("id", "board"+boards[i].id+"-"+statuses[j].name);
-                newStatusColumn.appendChild(newDivForCardsContainer);
-
-                let newDivForCardsContainerStatus = document.createElement("div");
-                newDivForCardsContainerStatus.classList.add("status");
-                newDivForCardsContainerStatus.setAttribute("id", "status" + statuses[j].name);
-                newDivForCardsContainerStatus.innerHTML = statuses[j].name;
-                newDivForCardsContainer.appendChild(newDivForCardsContainerStatus);
-
-                let cardsByBoardId = dataHandler.getCardsByBoardId(boards[i].id);
-                for (let k = 0; k < cardsByBoardId.length; k++) {
-                    if (cardsByBoardId[k].status_id === statuses[j].id) {
-                        let newDivForCards = document.createElement("div");
-                        newDivForCards.classList.add("card", "new");
-                        newDivForCards.setAttribute("id", "card" + cardsByBoardId[k].id);
-                        newDivForCards.innerHTML = cardsByBoardId[k].title;
-                        newDivForCardsContainer.appendChild(newDivForCards);
-
-                        let newDivForCardEdit = document.createElement("i");
-                        newDivForCardEdit.classList.add("fas", "fa-edit", "forcards");
-                        newDivForCardEdit.setAttribute("id", "cardEdit" + cardsByBoardId[k].id);
-                        newDivForCards.appendChild(newDivForCardEdit)
-                    }
-                }
-            }*/
-
-
-    loadCards: function(boardId) {
-        // retrieves cards and makes showCards called
-    },
-    showCards: function(cards) {
-        // shows the cards of a board
-        // it adds necessary event listeners also
-    },
-    // here comes more features
-    addEventListenerToNewBoardIcon: function () {
-        document.getElementById("new_board_icon").addEventListener("click",this.handleClickOnNewBoardIcon)
-    },
-
-    addEventListenerToSaveNewBoardButton: function () {
-        document.getElementById("save_new_board_button").addEventListener("click", this.handleClickOnSaveNewBoardButton)
-    },
-
-    addEventListenerToEditBoardTitle: function () {
-        let editableBoard = document.getElementsByClassName("titleEditButton");
-        for(let i=0; i<editableBoard.length; i++){
-            editableBoard[i].addEventListener("click", this.handleClickOnEditBoardTitle)
-        }
-    },
-
-    addEventListenerToEditCardTitle: function () {
-        let editableCard = document.getElementsByClassName("fas fa-edit");
-        for( let i = 0; i < editableCard.length; i++){
-            editableCard[i].addEventListener("click", this.handleClickOnEditCardTitle)
-        }
-
-    },
-
-    handleClickOnNewBoardIcon: function () {
-        document.getElementById("new_board_input_field").value = "";
-
-        let newBoardText = document.getElementById("new_board_text");
-        newBoardText.setAttribute("hidden", true);
-
-        let newBoardInput = document.getElementById("new_board_input_field");
-        newBoardInput.removeAttribute("hidden");
-
-        let saveNewBoardButton = document.getElementById("save_new_board_button");
-        saveNewBoardButton.removeAttribute("hidden");
-    },
-
-    handleClickOnSaveNewBoardButton: function () {
-        let newBoardText = document.getElementById("new_board_text");
-        newBoardText.removeAttribute("hidden");
-
-        let newBoardInput = document.getElementById("new_board_input_field");
-        newBoardInput.setAttribute("hidden", true);
-
-        let saveNewBoardButton = document.getElementById("save_new_board_button");
-        saveNewBoardButton.setAttribute("hidden", true);
-
-        let newBoardTitle = document.getElementById("new_board_input_field").value;
-        dataHandler.createNewBoard(newBoardTitle);
-
-        dom.loadBoards();
-    },
-
-    addEventListenerToBoardDetailButton: function () {
-        let detailForBoards = document.getElementsByClassName("boards");
-        for (let detailForBoard of detailForBoards) {
-            detailForBoard.addEventListener("click", function () {
-
-                let detailButtonId = detailForBoard.id;
-                let boardDetail = document.getElementById("boarddetail" + detailButtonId.replace("board",""));
-                if(boardDetail.hasAttribute("hidden")) {
-                    boardDetail.removeAttribute("hidden");
-                } else {
-                    boardDetail.setAttribute("hidden", true)
-                }
-
-                let newCardButtonId = document.getElementById("newboardcard" + detailButtonId.replace("board",""));
-                newCardButtonId.removeAttribute("hidden");
-                newCardButtonId.addEventListener("click", function () {
-                    newCardButtonId.setAttribute("hidden", true);
-
-                    let textBoxForNewCard = document.createElement("input");
-                    textBoxForNewCard.classList.add("form-control", "card");
-                    textBoxForNewCard.setAttribute("placeholder", "New Card Title");
-                    newCardButtonId.parentElement.appendChild(textBoxForNewCard);
-
-                    let saveButtonForNewCard = document.createElement("button");
-                    saveButtonForNewCard.classList.add("btn");
-                    saveButtonForNewCard.innerText= "Save";
-
-                    newCardButtonId.parentElement.appendChild(saveButtonForNewCard);
-                    saveButtonForNewCard.addEventListener("click", function (){
-                        let newCardTitleGiven = textBoxForNewCard.value;
-                        dataHandler.createNewCard(newCardTitleGiven, detailButtonId.replace("board",""), 1);
-                        location.reload()
-                    }, false)
-                }, false)
-            });
-        }
-    },
-
-    handleClickOnEditBoardTitle: function () {
-        let boardElementID = this.parentElement.getAttribute("id");
-        let boardID = Number(boardElementID.replace("board", ""));
-
-        let inputField = document.getElementById("edit-input-field" + boardID);
-        let saveButton = document.getElementById("edit-input-button" + boardID);
-
-        if(inputField.hasAttribute("hidden") && saveButton.hasAttribute("hidden")) {
-            inputField.removeAttribute("hidden");
-            saveButton.removeAttribute("hidden");
-        } else {
-            inputField.setAttribute("hidden", true);
-            saveButton.setAttribute("hidden", true);
-        }
-
-        saveButton.addEventListener("click", function() {
-            let newBoardTitle = document.getElementById("edit-input-field"+boardID).value;
-            dataHandler.editBoardTitle(newBoardTitle, boardID);
-            document.getElementById(boardElementID).innerHTML = newBoardTitle;
-
-            
-            dom.loadBoards();
-
-        });
-    },
-
-    addEventListenerToCloseBoardDetailButton: function () {
-        let closeDetailButtons = document.getElementsByClassName("fas fa-angle-up");
-        for (let i = 0; i < closeDetailButtons.length; i++) {
-            closeDetailButtons[i].addEventListener("click", function () {
-                let closeDetailButtonId = closeDetailButtons[i].id;
-                document.getElementById(closeDetailButtonId).setAttribute("hidden", true);
-
-                let DetailButton = document.getElementById("detail" + closeDetailButtonId.replace("closedetail",""));
-                DetailButton.removeAttribute("hidden");
-
-                let boardDetail = document.getElementById("boarddetail" + closeDetailButtonId.replace("closedetail",""));
-                boardDetail.setAttribute("hidden", true);
-
-                let newCardButtonId = document.getElementById("newboardcard" + closeDetailButtonId.replace("closedetail",""));
-                newCardButtonId.setAttribute("hidden", true);
-            });
-        }
-    },
-
-    handleClickOnEditCardTitle: function () {
-        let cardElementID = this.parentElement.getAttribute("id");
-        let cardID = Number(cardElementID.replace("card", ""));
-        let editCardTitleinput = document.createElement("input");
-
-        this.parentElement.appendChild(editCardTitleinput);
-        editCardTitleinput.setAttribute("placeholder", "New card title");
-        editCardTitleinput.setAttribute("type", "text");
-        editCardTitleinput.setAttribute("id", "edit-card-input-field" + cardID);
-        editCardTitleinput.setAttribute("class", "form-control");
-
-        let saveEditButton = document.createElement("button");
-        this.parentElement.appendChild(saveEditButton);
-        saveEditButton.setAttribute("class", "btn");
-        saveEditButton.innerHTML = "Save";
-
-        saveEditButton.addEventListener("click", function () {
-
-            let newCardTitle = document.getElementById("edit-card-input-field"+cardID).value;
-            dataHandler.editCardTitle(newCardTitle, cardID);
-            document.getElementById(cardElementID).innerHTML = newCardTitle;
-
-            let Card = document.getElementById(cardElementID);
-            let newiForCardEdit = document.createElement("i");
-                newiForCardEdit.classList.add("fas", "fa-edit", "forcards");
-                newiForCardEdit.setAttribute("id", "cardEdit" + cardID);
-                Card.appendChild(newiForCardEdit);
-                dom.addEventListenerToEditCardTitle();
-        });
-    },
-
-    handleCardDrop: function (drake) {
-        drake.on('drop', function(el, target, source, sibling) {
-            let cardId = Number(el.id.replace("card", ""));
-            let card = dataHandler.getCard(cardId);
-            let statusName = target.dataset.status;
-            let status = dataHandler.getStatusIDByName(statusName);
-
-            let boardId = card.board_id;
-            let cardsForThisBoard = dataHandler.getCardsByBoardId(boardId);
-            let orderForThisBoardAndDroppedToStatus = [];
-            for (let i = 0; i < cardsForThisBoard.length; i++) {
-                if (cardsForThisBoard[i].status_id === status.id) {
-                    orderForThisBoardAndDroppedToStatus.push(cardsForThisBoard[i].order_num);
-                }
-            }
-
-            let maxOrderForThisBoardAndStatus = Math.max(...orderForThisBoardAndDroppedToStatus);
-
-            if (sibling === null) {
-
-                if (orderForThisBoardAndDroppedToStatus.length > 0) {
-                    card.order_num = maxOrderForThisBoardAndStatus + 1;
-                } else {
-                    card.order_num = 1;
-                }
+        let detailForBoard = document.getElementById("boardspan" + boardid);
+        detailForBoard.addEventListener("click", function () {
+            let boardDetail = document.getElementById("boarddetail" + boardid);
+            if (boardDetail.hasAttribute("hidden")) {
+                boardDetail.removeAttribute("hidden");
             } else {
-                let droppedBeforeCardId = Number(sibling.id.replace("card", ""));
-                let droppedBeforeCard = dataHandler.getCard(droppedBeforeCardId);
-                if (droppedBeforeCard.order_num === 1) {
-                    for (let i = 0; i < cardsForThisBoard.length; i++) {
-                        if (cardsForThisBoard[i].status_id === status.id && cardsForThisBoard[i].id !== card.id) {
-                            cardsForThisBoard[i].order_num++;
-                        }
-                    }
-                    card.order_num = 1;
-                } else {
-                    card.order_num = droppedBeforeCard.order_num;
-                    for (let i = 0; i < cardsForThisBoard.length; i++) {
-                        if (cardsForThisBoard[i].status_id === status.id && cardsForThisBoard[i].id !== card.id) {
-                            if (cardsForThisBoard[i].order_num >= card.order_num) {
-                                cardsForThisBoard[i].order_num++;
-                            }
-
-                        }
-                    }
-                }
+                boardDetail.setAttribute("hidden", true)
             }
 
-            let draggedFrom = source;
-            let draggedFromCards = draggedFrom.getElementsByClassName("card new");
 
-            if (draggedFromCards.length > 0) {
-                for (let i = 0; i < draggedFromCards.length; i++) {
-                    cardId = Number(draggedFromCards[i].id.replace("card", ""));
-                    let oldCard = dataHandler.getCard(cardId);
-                    oldCard.order_num = i + 1;
-                }
-            }
+        })
+    },
 
-            card.status_id = status.id;
-            dataHandler._saveData("cards", card);
-        });
+
+    addEventlistenerToSingleCard: function (cardid) {
+        let editableCard = document.getElementById("cardEdit" + cardid);
+        editableCard.addEventListener("click", dom.handleClickOnEditCardTitle)
+
+    },
+
+    addEventListenerToEditSingleBoardTitle: function (boardid) {
+        let editableBoard = document.getElementById("edit" + boardid);
+        editableBoard.addEventListener("click", dom.handleClickOnEditBoardTitle)
+
     },
 
     loginScreen: function (message) {

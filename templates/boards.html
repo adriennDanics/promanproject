@@ -10,11 +10,13 @@
         </div>
         <img id="fun-theme" src="https://media1.tenor.com/images/8af8c8aa699dbb19e5aaa0db978ce484/tenor.gif?itemid=5235956">
         <div class="btn bg-dark" id="dark-theme">Dark</div>
-        <div class="card" id="new_board_box">
-            <i class="fas fa-plus" id="new_board_icon"></i>
-            <div id="new_board_text">New Board</div>
+        <div class="card btn" id="new_board_box">
+            <div id="new_board_clickable_area">
+                <div id="new_board_text">New Board</div>
+            </div>
             <input class="form-control" id="new_board_input_field" hidden>
             <button class="btn btn-outline-info" id="save_new_board_button" hidden>Save Board</button>
+            <button class="btn btn-outline-info" id="cancel_saving_new_board_button" hidden>Cancel</button>
         </div>
     </div>
     <div class="container" id="boards"></div>

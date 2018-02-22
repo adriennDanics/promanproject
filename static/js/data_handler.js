@@ -10,12 +10,12 @@ dataHandler = {
     _loadData: function(callback) {
         // it is not called from outside
         // loads data from local storage, parses it and put into this._data property
-        $.ajax({
+        setTimeout(function () {
+            $.ajax({
             dataType: "json",
             url: "http://127.0.0.1:5000/data" ,
             method: 'GET',
             success: function(response) {
-                debugger;
                 if(response.user_id){
                     dataHandler._data = response;
                     callback();
@@ -28,6 +28,7 @@ dataHandler = {
             }
         });
         dataHandler._theme = JSON.parse(localStorage.getItem("theme"));
+        }, 500);
     },
     _saveData: function(whatToUpdateOrAdd, dataToSave) {
         // it is not called from outside
@@ -35,17 +36,6 @@ dataHandler = {
         // dataToSave parameter: piece of data specifically to be updated
         if(dataToSave === "theme"){
            localStorage.setItem("theme", JSON.stringify(dataHandler._theme));
-        } else if (whatToUpdateOrAdd === "boards") {
-            let dataToPost = {"table": whatToUpdateOrAdd, "data": dataToSave};
-            $.ajax({
-                type: "POST",
-                url: "http://127.0.0.1:5000/data_new",
-                data: JSON.stringify(dataToPost),
-                async: false,
-                contentType: "application/json; charset=utf-8",
-                dataType: 'json',
-                success:location.reload()
-                });
         } else {
             let dataToPost = {"table": whatToUpdateOrAdd, "data": dataToSave};
             $.ajax({
@@ -54,8 +44,9 @@ dataHandler = {
                 data: JSON.stringify(dataToPost),
                 async: false,
                 contentType: "application/json; charset=utf-8",
-                dataType: 'json'
-            })
+                dataType: 'json',
+                success: location.reload()
+            });
         }
     },
     _loginUser: function(dataToSave, callback) {
@@ -156,6 +147,7 @@ dataHandler = {
         };
         dataHandler._data.boards.push(newBoard);
         dataHandler._saveData('boards',newBoard);
+        return newBoard
     },
 
     createNewCard: function(cardTitle, boardId, statusId) {
@@ -180,6 +172,7 @@ dataHandler = {
         };
         dataHandler._data.cards.push(newCard);
         dataHandler._saveData("cards", newCard);
+        return newCard
     },
 
     editBoardTitle: function(newTitle, boardID) {

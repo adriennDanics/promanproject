@@ -57,6 +57,7 @@ h5.alert {
     right: 20px;
     text-align: right;
     align-self: right;
+    padding: 5px;
 }
 
 .footer {
